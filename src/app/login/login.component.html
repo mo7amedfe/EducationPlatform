@@ -1,0 +1,35 @@
+<div class="container mt-5">
+    <div class="row">
+        <h1>Login now.</h1>
+        <form [formGroup]="LoginForm" (ngSubmit)="login()">
+            <label for="">Email</label>
+            <input class="form-control" formControlName="email" type="email">
+            <label for="">Password</label>
+            <input class="form-control" formControlName="password" type="password">
+            <button class="btn btn-info my-2" [disabled]="LoginForm.invalid" type="submit">submit</button>
+
+  
+        </form>
+
+        <div  class="alert alert-danger my-2" 
+        *ngIf="LoginForm.get('email')?.touched || LoginForm.get('password')?.touched"
+        >
+
+            <div *ngIf="LoginForm.get('email')?.touched && LoginForm.get('email')?.invalid">
+                <p *ngIf="LoginForm.get('email')?.getError('required')">Email is required</p>
+                <p *ngIf="LoginForm.get('email')?.getError('email')">Invalid email format</p>
+            </div>
+            <div *ngIf="LoginForm.get('password')?.touched && LoginForm.get('password')?.invalid">
+                <p *ngIf="LoginForm.get('password')?.getError('required')">Password is required</p>
+                <p *ngIf="LoginForm.get('password')?.getError('minlength')">Password must be at least 8 characters long
+                </p>
+                <p *ngIf="LoginForm.get('password')?.getError('pattern')">Password must contain an uppercase letter, a
+                    lowercase letter, a number, and a special character</p>
+            </div>
+
+
+        </div>
+
+
+    </div>
+</div>

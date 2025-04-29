@@ -1,0 +1,15 @@
+<h1>Our Courses</h1>
+<div class="container">
+    <div class="row">
+        <div *ngFor="let course of courses" class="col-md-6 my-3">
+            <a [routerLink]="[`/courses/${course._id}`]" class="text-decoration-none">
+                <app-card 
+                [title]="course.title" 
+                [description]="course.description"
+                [imageUrl]="course.imageurl.secure_url">
+              </app-card>
+            </a>
+      
+        </div>
+    </div>
+</div>

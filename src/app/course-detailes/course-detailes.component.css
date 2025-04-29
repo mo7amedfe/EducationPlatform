@@ -1,0 +1,26 @@
+.course-container {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .course-container:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .course-container img {
+    max-height: 300px;
+    object-fit: cover;
+  }
+  
+  h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  p {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  

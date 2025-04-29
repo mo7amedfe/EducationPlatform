@@ -1,0 +1,95 @@
+import { UserService } from './../user.service';
+import { CommonModule } from '@angular/common';
+import { AuthService } from './../auth.service';
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
+
+@Component({
+  selector: 'app-navbar',
+  imports: [CommonModule, RouterLink],
+  templateUrl: './navbar.component.html',
+  styleUrl: './navbar.component.css'
+})
+export class NavbarComponent implements OnInit {
+
+  isLogin: boolean = false;
+  currentRoute: string = '';
+
+  navs = [{
+    name: "Home", link: "/"
+  }, {
+    name: "Placement Test", link: "/PlacementTest"
+
+  }]
+
+  constructor(private _AuthService: AuthService, private _UserService: UserService, private _Router: Router) { }
+  user: any = {};
+  imagePreview: string | ArrayBuffer | null = null;
+
+  ngOnInit(): void {
+    
+    this._AuthService.checkLoginStatus(); // أول حاجة، شوف هو لوج إن ولا لا
+
+    this._AuthService.isLogin$.subscribe((state) => {
+      this.isLogin = state;
+
+      if (state) {
+        const decodedToken = this._AuthService.getDecodedToken();
+        this.user = decodedToken;
+        this._UserService.getProfile().subscribe({
+          next: (res) => {
+            console.log(res); 
+            this._UserService.setScore(res.user.score)
+            this._UserService.setProfileImage(res.user.profile_pic.secure_url)
+            this._UserService.setname(res.user.userName)
+            this._UserService.setEmail(res.user.email)
+
+            this._UserService.$profileImage.subscribe((url) => {
+              this.imagePreview = url
+            })
+            this._UserService.$name.subscribe((name) => {
+              if (name) {
+                this.user.username = name
+
+              }
+            })
+
+          }
+        })
+      } else {
+        this.user = {};
+      }
+
+    });
+
+    this._Router.events.subscribe(() => {
+      this.currentRoute = this._Router.url;
+    });
+
+  }
+
+
+
+  logout() {
+    // this.isLogin = false
+    this._AuthService.setIsLogin(false)
+    localStorage.removeItem('token')
+    this._Router.navigate(['/login'])
+  }
+  login() {
+    this._Router.navigate(['/login'])
+
+  }
+  register() {
+    this._Router.navigate(['/register'])
+
+  }
+
+
+
+}
+function setImagePreview(secure_url: any) {
+  throw new Error('Function not implemented.');
+}
+
