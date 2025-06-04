@@ -1,3 +1,14 @@
+.navbar {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+z-index: 1000;
+background-color: #1c2b33 ;
+
+}
+
+ 
  .nav-list {
      margin: 0 10px;
  }
@@ -24,4 +35,5 @@
 .active-profile{
 background-color: #dadada;
 border: #000 2px solid;
+background-color: rgba(0, 0, 0, 0.3);
 }

@@ -11,9 +11,9 @@ export class AuthService {
   constructor() { }
 
   isLogin = new BehaviorSubject<boolean>(false);
-  isLogin$ = this.isLogin.asObservable()
+  isLogin$ = this.isLogin.asObservable();
 
-  getDecodedToken() :DecodedToken|null {
+  getDecodedToken(): DecodedToken | null {
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('token');
       if (token) {
@@ -24,15 +24,24 @@ export class AuthService {
   }
 
   checkLoginStatus() {
-    const token = this.getToken();
-    const isLoggedIn = !!token;
-    this.setIsLogin(isLoggedIn);
+    if (typeof window !== 'undefined') {
+      const token = this.getToken();
+      const isLoggedIn = !!token;
+      this.setIsLogin(isLoggedIn);
+    } else {
+      this.setIsLogin(false);
+    }
   }
+
   setIsLogin(state: boolean) {
     this.isLogin.next(state);
   }
-  getToken() {
-    return localStorage.getItem('token') || '';
+
+  getToken(): string {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('token') || '';
+    }
+    return '';
   }
 
 }

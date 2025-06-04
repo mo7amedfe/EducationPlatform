@@ -17,10 +17,14 @@ export class NavbarComponent implements OnInit {
   currentRoute: string = '';
 
   navs = [{
-    name: "Home", link: "/"
+    name: "Home", link: "/home"
   }, {
     name: "Placement Test", link: "/PlacementTest"
 
+  }, {
+    name: "Cart", link: "/Cart"
+  },{
+    name: "Subscribed Courses", link: "/subscribed-courses"
   }]
 
   constructor(private _AuthService: AuthService, private _UserService: UserService, private _Router: Router) { }
@@ -28,6 +32,12 @@ export class NavbarComponent implements OnInit {
   imagePreview: string | ArrayBuffer | null = null;
 
   ngOnInit(): void {
+    const token = localStorage.getItem('token');
+    // const currentUrl = this._router.url;
+
+    if (token) {
+    
+    }
     
     this._AuthService.checkLoginStatus(); // أول حاجة، شوف هو لوج إن ولا لا
 
@@ -35,11 +45,21 @@ export class NavbarComponent implements OnInit {
       this.isLogin = state;
 
       if (state) {
+        this.navs = [{
+          name: "Home", link: "/home"
+        }, {
+          name: "Placement Test", link: "/PlacementTest"
+      
+        }, {
+          name: "Cart", link: "/Cart"
+        },{
+          name: "Subscribed Courses", link: "/subscribed-courses"
+        }]
         const decodedToken = this._AuthService.getDecodedToken();
         this.user = decodedToken;
         this._UserService.getProfile().subscribe({
           next: (res) => {
-            console.log(res); 
+            // console.log(res); 
             this._UserService.setScore(res.user.score)
             this._UserService.setProfileImage(res.user.profile_pic.secure_url)
             this._UserService.setname(res.user.userName)
@@ -59,6 +79,9 @@ export class NavbarComponent implements OnInit {
         })
       } else {
         this.user = {};
+        this.navs=[{
+          name: "Home", link: "/home"
+        }]
       }
 
     });
@@ -71,11 +94,11 @@ export class NavbarComponent implements OnInit {
 
 
 
-  logout() {
+  async logout() {
     // this.isLogin = false
     this._AuthService.setIsLogin(false)
-    localStorage.removeItem('token')
-    this._Router.navigate(['/login'])
+    await localStorage.removeItem('token')
+    this._Router.navigate(['/'])
   }
   login() {
     this._Router.navigate(['/login'])

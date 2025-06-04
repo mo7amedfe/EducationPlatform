@@ -1,0 +1,50 @@
+.timetable-container {
+  background: #f8fafc;
+  min-height: 100vh;
+}
+
+.table {
+  background: #fff;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(44, 62, 80, 0.08);
+}
+
+th, td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+h2 {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.card {
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: none;
+}
+
+.card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(44, 62, 80, 0.12);
+}
+
+.card-img-top {
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  object-fit: cover;
+}
+
+.card-title {
+  color: #2c3e50;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.card-text {
+  color: #7b8a99;
+  font-size: 1rem;
+}

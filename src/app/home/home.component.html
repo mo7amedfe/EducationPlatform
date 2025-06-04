@@ -1,9 +1,11 @@
-<div class="container my-5">
+
+<div class="container ">
     <div class="row">
-        <h3 *ngIf="user.username!=''">Hello, {{user.username}}</h3>
+        <h3 class="greeting-card" *ngIf="user.username!=''">Hello, {{user.username}}</h3>
 
         <div class="all-courses px-5">
-           <app-courses></app-courses>
+            
+            <app-courses></app-courses>
         </div>
     </div>
 </div>

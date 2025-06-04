@@ -35,7 +35,7 @@ export class PlacementTestComponent implements OnInit {
         if (state !== undefined) {
           this.isSubmitted = true;
           this.isSubmittedBefore = true;
-        }else if(state===undefined){
+        }else if(state===undefined ){
           this.getQuestions().subscribe({
             next: (res) => {
               if (res.questions) {

@@ -1,0 +1,43 @@
+<div class="timetable-container py-5">
+  <div class="container">
+    <h2 class="text-center mb-4">My Course Schedule</h2>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Course</th>
+          <th>Day</th>
+          <th>Time</th>
+       
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let course of courses">
+          <td>{{ course.title }}</td>
+          <td>{{ course.selectedSchedule.scheduleTime.split(' ')[1] }}</td>
+          <td>{{ course.selectedSchedule.scheduleTime.split(' ')[0] }}</td>
+ 
+        </tr>
+      </tbody>
+    </table>
+  </div>
+<!-- Timetable Table (keep your existing code above) -->
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">My Enrolled Courses</h2>
+    <div class="row g-4">
+      <div (click)="navigateToCourseDetails(course.courseId)" style="cursor: pointer;" class="col-md-6 col-lg-4" *ngFor="let course of courses">
+        <div class="card h-100 shadow-sm" >
+          <img *ngIf="course.image?.secure_url"
+               [src]="course.image.secure_url"
+               [alt]="course.title"
+               class="card-img-top"
+               style="height: 220px; object-fit: cover;">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ course.title }}</h5>
+            <p class="card-text flex-grow-1">{{ course.description }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -10,4 +10,5 @@ export class CardComponent {
   @Input() title: string = '';
   @Input() description: string = '';
   @Input() imageUrl: string = '';
+  @Input() price: number = 0;
 }

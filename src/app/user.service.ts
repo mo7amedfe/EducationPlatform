@@ -25,6 +25,7 @@ export class UserService {
     
   }
 
+
   email = new BehaviorSubject<any>(null)
   $email = this.email.asObservable()
   setEmail(url: string) {
@@ -46,10 +47,16 @@ export class UserService {
   Login(userData: any): Observable<any> {
     return this._HttpClient.post(`${this.BaseUrl}/user/login`, userData);
 
+
   }
   updateUserData(body: any): Observable<any> {
+
     const token = this._AuthService.getToken();
+
+    
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
+
+    
     return this._HttpClient.patch(`${this.BaseUrl}/user/`, body, { headers })
   }
 
@@ -63,4 +70,9 @@ export class UserService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this._HttpClient.get(`${this.BaseUrl}/user/`, { headers })
   }
+  // getCart():Observable<any>{
+  //   const token = this._AuthService.getToken();
+  //   const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  //   return this._HttpClient.get(`${this.BaseUrl}/user/cart`, { headers })
+  // }
 }

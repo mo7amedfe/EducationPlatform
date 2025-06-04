@@ -1,10 +1,16 @@
-<div class="card p-3 bg-secondary bg-opacity-25">
-    <div class="img-container  rounded-3 overflow-hidden" >
-        <img class="" [src]="imageUrl" alt="" srcset="">
+<div class="card">
+    <div class="card-image">
+        <img [src]="imageUrl" [alt]="title">
+        <div class="card-overlay">
+            <!-- <button class="btn btn-primary">Add to Cart</button> -->
+        </div>
     </div>
-    <div class="info py-3 px-2">
-        <h4 class="w-100">{{title}}</h4>
-        <p class="w-100">{{description}}</p>
-        <button class="btn btn-info w-100">Subscribe</button>
+    <div class="card-content">
+        <h3 class="card-title">{{title}}</h3>
+        <p class="card-description">{{description}}</p>
+        <div class="card-price">
+            <span class="price-amount">${{price}}</span>
+            <span class="price-period">/course</span>
+        </div>
     </div>
 </div>

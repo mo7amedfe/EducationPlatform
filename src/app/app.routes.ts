@@ -5,14 +5,23 @@ import { RegisterComponent } from './register/register.component';
 import { PlacementTestComponent } from './placement-test/placement-test.component';
 import { CourseDetailesComponent } from './course-detailes/course-detailes.component';
 import { ProfileComponent } from './profile/profile.component';
+import { CartComponent } from './cart/cart.component';
+import { SubscribedCoursesComponent } from './subscribed-courses/subscribed-courses.component';
+import { EnrolledCourseDataComponent } from './enrolled-course-data/enrolled-course-data.component';
+import { LandingComponent } from './landing/landing.component';
 
 export const routes: Routes = [
-    { path: '', component: HomeComponent }, // route for "/"
+    { path: '', component: LandingComponent  },
+    { path: 'home', component: HomeComponent }, // route for "/"
     { path: 'login', component: LoginComponent }, 
     { path: 'register', component: RegisterComponent }, 
     { path: 'profile', component: ProfileComponent }, 
     { path: 'PlacementTest', component: PlacementTestComponent }, 
-    { path: 'courses/:id', component: CourseDetailesComponent }
+    { path: 'Cart', component: CartComponent }, 
+    { path: 'subscribed-courses', component: SubscribedCoursesComponent }, 
+    { path: 'courses/:id', component: CourseDetailesComponent },
+    { path: 'subscribed-courses/:id', component: EnrolledCourseDataComponent }
+
     // { path: '**', component: NotFoundComponent } //wildcard route (404)
 
   ];

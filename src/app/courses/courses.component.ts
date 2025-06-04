@@ -17,7 +17,7 @@ export class CoursesComponent implements OnInit {
   ngOnInit(): void {
     this.getCoarses().subscribe({
       next: (res) => {
-        console.log(res);
+        // console.log(res);
         this.courses = res
       }
     })

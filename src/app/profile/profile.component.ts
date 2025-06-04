@@ -5,10 +5,11 @@ import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { SubscribedCoursesComponent } from "../subscribed-courses/subscribed-courses.component";
 
 @Component({
   selector: 'app-profile',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, SubscribedCoursesComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
