@@ -8,7 +8,8 @@ import { DecodedToken } from './decoded-token';
 })
 export class AuthService {
 
-  constructor() { }
+  isAdmin = new BehaviorSubject<boolean>(false);
+  isAdmin$ = this.isAdmin.asObservable();
 
   isLogin = new BehaviorSubject<boolean>(false);
   isLogin$ = this.isLogin.asObservable();
@@ -28,6 +29,21 @@ export class AuthService {
       const token = this.getToken();
       const isLoggedIn = !!token;
       this.setIsLogin(isLoggedIn);
+      if (isLoggedIn) {
+        const decodedToken = this.getDecodedToken();
+        if (decodedToken && decodedToken.role === 'Admin') {
+          this.setIsAdmin(true);
+          console.log(this.isAdmin.getValue());
+        } else {
+          this.setIsAdmin(false);
+          console.log(this.isAdmin.getValue());
+
+        }
+      } else {
+        this.setIsAdmin(false);
+          console.log(this.isAdmin.getValue());
+
+      }
     } else {
       this.setIsLogin(false);
     }
@@ -35,6 +51,9 @@ export class AuthService {
 
   setIsLogin(state: boolean) {
     this.isLogin.next(state);
+  }
+  setIsAdmin(state: boolean) {
+    this.isAdmin.next(state);
   }
 
   getToken(): string {

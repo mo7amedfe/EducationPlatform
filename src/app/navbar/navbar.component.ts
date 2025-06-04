@@ -23,9 +23,14 @@ export class NavbarComponent implements OnInit {
 
   }, {
     name: "Cart", link: "/Cart"
-  },{
+  }, {
     name: "Subscribed Courses", link: "/subscribed-courses"
-  }]
+  }
+    , {
+    name: "Admin", link: "/admin"
+  }
+
+  ]
 
   constructor(private _AuthService: AuthService, private _UserService: UserService, private _Router: Router) { }
   user: any = {};
@@ -33,28 +38,35 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     const token = localStorage.getItem('token');
-    // const currentUrl = this._router.url;
 
-    if (token) {
-    
-    }
-    
+
     this._AuthService.checkLoginStatus(); // أول حاجة، شوف هو لوج إن ولا لا
 
     this._AuthService.isLogin$.subscribe((state) => {
       this.isLogin = state;
 
       if (state) {
+
         this.navs = [{
           name: "Home", link: "/home"
         }, {
           name: "Placement Test", link: "/PlacementTest"
-      
+
         }, {
           name: "Cart", link: "/Cart"
-        },{
+        }, {
           name: "Subscribed Courses", link: "/subscribed-courses"
-        }]
+        }
+        ]
+        this._AuthService.isAdmin$.subscribe((state) => {
+          if (state) {
+            this.navs.push({
+              name: "Admin" , link:"/admin"
+            });
+          } else {
+            this.navs = this.navs.filter(nav => nav.name !== "Admin");
+          }
+        });
         const decodedToken = this._AuthService.getDecodedToken();
         this.user = decodedToken;
         this._UserService.getProfile().subscribe({
@@ -79,7 +91,7 @@ export class NavbarComponent implements OnInit {
         })
       } else {
         this.user = {};
-        this.navs=[{
+        this.navs = [{
           name: "Home", link: "/home"
         }]
       }

@@ -25,6 +25,7 @@ export class SubscribedCoursesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
     const token = this._AuthService.getToken();
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     this._HttpClient

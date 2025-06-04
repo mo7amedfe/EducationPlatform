@@ -24,7 +24,11 @@ export class ProfileComponent {
   constructor(private _AuthService: AuthService, private _UserService: UserService) { }
 
   ngOnInit(): void {
-
+    this._AuthService.isAdmin$.subscribe((state) => {
+      if (state) {
+        this.isAdmin = true
+      }
+    });
     const decodedToken = this._AuthService.getDecodedToken();
     if (decodedToken) {
       this.user = decodedToken;
@@ -44,6 +48,7 @@ export class ProfileComponent {
       this.user.score = state
     })
   }
+     isAdmin:boolean = false
 
   updateUserData() {
     const body = {

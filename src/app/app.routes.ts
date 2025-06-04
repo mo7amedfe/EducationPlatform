@@ -9,6 +9,7 @@ import { CartComponent } from './cart/cart.component';
 import { SubscribedCoursesComponent } from './subscribed-courses/subscribed-courses.component';
 import { EnrolledCourseDataComponent } from './enrolled-course-data/enrolled-course-data.component';
 import { LandingComponent } from './landing/landing.component';
+import { AdminComponent } from './admin/admin.component';
 
 export const routes: Routes = [
     { path: '', component: LandingComponent  },
@@ -20,7 +21,9 @@ export const routes: Routes = [
     { path: 'Cart', component: CartComponent }, 
     { path: 'subscribed-courses', component: SubscribedCoursesComponent }, 
     { path: 'courses/:id', component: CourseDetailesComponent },
-    { path: 'subscribed-courses/:id', component: EnrolledCourseDataComponent }
+    { path: 'subscribed-courses/:id', component: EnrolledCourseDataComponent },
+    { path: 'admin', component: AdminComponent }
+
 
     // { path: '**', component: NotFoundComponent } //wildcard route (404)
 
