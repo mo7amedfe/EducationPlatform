@@ -14,11 +14,18 @@ import { Observable } from 'rxjs';
 export class CoursesComponent implements OnInit {
   constructor(private _HttpClient: HttpClient) { }
   courses: any = []
+  isLoading = true;
+
   ngOnInit(): void {
+    this.isLoading = true;
     this.getCoarses().subscribe({
       next: (res) => {
         // console.log(res);
         this.courses = res
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
       }
     })
 
