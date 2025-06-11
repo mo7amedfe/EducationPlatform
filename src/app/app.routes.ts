@@ -1,3 +1,4 @@
+import { StudentsAssignmentsComponent } from './students-assignments/students-assignments.component';
 import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
@@ -10,6 +11,7 @@ import { SubscribedCoursesComponent } from './subscribed-courses/subscribed-cour
 import { EnrolledCourseDataComponent } from './enrolled-course-data/enrolled-course-data.component';
 import { LandingComponent } from './landing/landing.component';
 import { AdminComponent } from './admin/admin.component';
+import { CourseFinalTestComponent } from './course-final-test/course-final-test.component';
 
 export const routes: Routes = [
     { path: '', component: LandingComponent  },
@@ -22,7 +24,11 @@ export const routes: Routes = [
     { path: 'subscribed-courses', component: SubscribedCoursesComponent }, 
     { path: 'courses/:id', component: CourseDetailesComponent },
     { path: 'subscribed-courses/:id', component: EnrolledCourseDataComponent },
-    { path: 'admin', component: AdminComponent }
+    { path: 'courseFinalTest/:id', component: CourseFinalTestComponent },
+
+    { path: 'admin', component: AdminComponent },
+    { path: 'studentsAssignments', component: StudentsAssignmentsComponent }
+
 
 
     // { path: '**', component: NotFoundComponent } //wildcard route (404)

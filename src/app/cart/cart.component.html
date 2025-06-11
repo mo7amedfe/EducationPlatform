@@ -61,7 +61,7 @@
                   <!-- Show selected schedule -->
                   <p class="course-schedule mb-0">
                     <i class="fas fa-calendar-alt me-2"></i>
-                    <strong>Selected Time:</strong> {{ getSelectedSchedule(item) }}
+                    <strong>Selected Time:</strong> {{ item.schedule?.day  }} {{ item.schedule?.time  }}
                   </p>
                 </div>
 

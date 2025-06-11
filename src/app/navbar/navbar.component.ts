@@ -28,6 +28,9 @@ export class NavbarComponent implements OnInit {
   }
     , {
     name: "Admin", link: "/admin"
+  },
+  {
+    name:'Students Assignments', link:'/studentsAssignments'
   }
 
   ]
@@ -62,6 +65,9 @@ export class NavbarComponent implements OnInit {
           if (state) {
             this.navs.push({
               name: "Admin" , link:"/admin"
+            });
+            this.navs.push({
+              name: "Students Assignments", link: "/studentsAssignments"
             });
           } else {
             this.navs = this.navs.filter(nav => nav.name !== "Admin");

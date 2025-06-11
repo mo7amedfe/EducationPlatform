@@ -6,10 +6,11 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { SubscribedCoursesComponent } from "../subscribed-courses/subscribed-courses.component";
+import { AssignmentsFeedbacksComponent } from "../assignments-feedbacks/assignments-feedbacks.component";
 
 @Component({
   selector: 'app-profile',
-  imports: [FormsModule, CommonModule, SubscribedCoursesComponent],
+  imports: [FormsModule, CommonModule, SubscribedCoursesComponent, AssignmentsFeedbacksComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })

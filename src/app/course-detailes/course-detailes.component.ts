@@ -1,3 +1,4 @@
+import { log } from 'console';
 // import { CartService } from './../cart.service';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
@@ -88,6 +89,8 @@ export class CourseDetailesComponent implements OnInit {
         this.course = this.courses.find((c: any) => c._id === this.id);
         this.checkIfInCart();
         this.courseSchedules = this.course.schedules;
+        console.log('Course Schedules:', this.courseSchedules);
+        console.log('Course Details:', this.course);
       },
     });
 
@@ -117,8 +120,8 @@ export class CourseDetailesComponent implements OnInit {
     }
   }
 
-  addToCart(scheduleId: string, courseId: string) {
-    this.CartService.addToCart(scheduleId, courseId).subscribe({
+  addToCart(schedule: any, courseId: string) {
+    this.CartService.addToCart(schedule, courseId).subscribe({
       next: (response) => {
         this.showMessage = true;
         this.message = 'Course added to cart successfully!';

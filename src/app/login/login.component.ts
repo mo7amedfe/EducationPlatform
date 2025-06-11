@@ -4,8 +4,6 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../user.service';
-import { NavbarComponent } from '../navbar/navbar.component';
-
 
 @Component({
   selector: 'app-login',
@@ -13,8 +11,11 @@ import { NavbarComponent } from '../navbar/navbar.component';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
+
 export class LoginComponent {
-  constructor(private _UserService: UserService, private _Router: Router, private _AuthService: AuthService) { }
+  errorMessage: string | null = null;
+
+  constructor(private _UserService: UserService, private _Router: Router, private _AuthService: AuthService) {}
 
   LoginForm = new FormGroup({
     email: new FormControl(null, [Validators.required, Validators.email]),
@@ -23,21 +24,27 @@ export class LoginComponent {
       Validators.minLength(8),
       Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,}$')
     ])
-  })
+  });
 
   login() {
+    this.errorMessage = null;
     this._UserService.Login(this.LoginForm.value).subscribe({
       next: (data) => {
-        console.log(data);
-        this._Router.navigate(['/home'])
         const token = data.userToken;
         localStorage.setItem('token', token);
-        this._AuthService.setIsLogin(true)
-        this._UserService.setScore(token.score)
-      }, error(err) {
-        console.log(err);
+        this._AuthService.setIsLogin(true);
+        this._UserService.setScore(data.score);
+        this._Router.navigate(['/home']);
       },
-    })
-
+      error: (err) => {
+        if (Array.isArray(err.error?.errors)) {
+          this.errorMessage = err.error.errors.map((e: any) => e.msg).join(', ');
+        } else if (err.error?.message) {
+          this.errorMessage = err.error.message;
+        } else {
+          this.errorMessage = 'Something went wrong. Please try again.';
+        }
+      }
+    });
   }
 }

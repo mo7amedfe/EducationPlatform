@@ -20,12 +20,12 @@ export class CartService {
   }
 
   // Add item to cart
-  addToCart(scheduleId: any, courseId: any) {
+  addToCart(schedule: any, courseId: any) {
     const token = this._AuthService.getToken();
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this._HttpClient.post(
       'http://localhost:3000/cart/addToCart',
-      { scheduleId, courseId },
+      { schedule, courseId },
       { headers }
     );
   }

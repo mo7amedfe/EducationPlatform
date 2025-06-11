@@ -1,35 +1,34 @@
 <div class="container mt-5">
-    <div class="row">
-        <h1>Login now.</h1>
-        <form [formGroup]="LoginForm" (ngSubmit)="login()">
-            <label for="">Email</label>
-            <input class="form-control" formControlName="email" type="email">
-            <label for="">Password</label>
-            <input class="form-control" formControlName="password" type="password">
-            <button class="btn btn-info my-2" [disabled]="LoginForm.invalid" type="submit">submit</button>
+  <div class="row">
+    <h1>Login now.</h1>
 
-  
-        </form>
+    <form [formGroup]="LoginForm" (ngSubmit)="login()">
+      <!-- Email Field -->
+      <label>Email</label>
+      <input class="form-control" formControlName="email" type="email" />
+      <div *ngIf="LoginForm.get('email')?.touched && LoginForm.get('email')?.invalid" class="text-danger">
+        <small *ngIf="LoginForm.get('email')?.errors?.['required']">Email is required</small>
+        <small *ngIf="LoginForm.get('email')?.errors?.['email']">Invalid email format</small>
+      </div>
 
-        <div  class="alert alert-danger my-2" 
-        *ngIf="LoginForm.get('email')?.touched || LoginForm.get('password')?.touched"
-        >
+      <!-- Password Field -->
+      <label>Password</label>
+      <input class="form-control" formControlName="password" type="password" />
+      <div *ngIf="LoginForm.get('password')?.touched && LoginForm.get('password')?.invalid" class="text-danger">
+        <small *ngIf="LoginForm.get('password')?.errors?.['required']">Password is required</small>
+        <small *ngIf="LoginForm.get('password')?.errors?.['minlength']">Password must be at least 8 characters long</small>
+        <small *ngIf="LoginForm.get('password')?.errors?.['pattern']">
+          Password must contain an uppercase letter, a lowercase letter, a number, and a special character
+        </small>
+      </div>
 
-            <div *ngIf="LoginForm.get('email')?.touched && LoginForm.get('email')?.invalid">
-                <p *ngIf="LoginForm.get('email')?.getError('required')">Email is required</p>
-                <p *ngIf="LoginForm.get('email')?.getError('email')">Invalid email format</p>
-            </div>
-            <div *ngIf="LoginForm.get('password')?.touched && LoginForm.get('password')?.invalid">
-                <p *ngIf="LoginForm.get('password')?.getError('required')">Password is required</p>
-                <p *ngIf="LoginForm.get('password')?.getError('minlength')">Password must be at least 8 characters long
-                </p>
-                <p *ngIf="LoginForm.get('password')?.getError('pattern')">Password must contain an uppercase letter, a
-                    lowercase letter, a number, and a special character</p>
-            </div>
+      <!-- Submit Button -->
+      <button class="btn btn-info my-3" type="submit" [disabled]="LoginForm.invalid">Submit</button>
+    </form>
 
-
-        </div>
-
-
+    <!-- Backend Error Message -->
+    <div *ngIf="errorMessage" class="alert alert-danger mt-2">
+      {{ errorMessage }}
     </div>
+  </div>
 </div>

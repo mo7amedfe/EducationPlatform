@@ -80,15 +80,15 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let schedule of courseSchedules">
-              <td>{{ schedule.schedule.split(' ')[0] }}</td>
-              <td>{{ schedule.schedule.split(' ').slice(1).join(' ') }}</td>
+            <tr *ngFor="let schedule of course.schedules">
+              <td>{{ schedule.time}}</td>
+              <td>{{ schedule.day }}</td>
               <td>
                 <span class="badge bg-success">Available</span>
               </td>
               <td>
                 <button class="btn btn-primary" 
-                        (click)="addToCart(schedule._id,id)"
+                        (click)="addToCart(schedule,id)"
                         [disabled]="isInCart"
                         [ngClass]="{'btn-secondary': isInCart}">
                   <i class="fas" [ngClass]="{'fa-shopping-cart': !isInCart, 'fa-check': isInCart}"></i>
