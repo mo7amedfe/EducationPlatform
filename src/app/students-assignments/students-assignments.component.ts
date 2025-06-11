@@ -101,7 +101,7 @@ giveFeedback(submission: any) {
 
     this._HttpClient
       .get(
-        `http://localhost:3000/submittedAssignment/my-submissions/${submission_id}/download`,
+        `http://localhost:3000/submittedAssignment/${submission_id}/download`,
         { headers, responseType: 'blob' }
       )
       .subscribe({
