@@ -26,6 +26,7 @@ export class EnrolledCourseDataComponent implements OnInit {
   selectedFile: File | null = null;
   uploadMessage: string = '';
 
+  isLoading = true;
 
   constructor(
     private _ActivatedRoute: ActivatedRoute,
@@ -49,6 +50,9 @@ export class EnrolledCourseDataComponent implements OnInit {
       if (this.courseData.courselessons.length > 0) {
         this.selectedLesson = this.courseData.courselessons[0];
       }
+      this.isLoading = false;
+    }, error => {
+      this.isLoading = false;
     });
      
   }

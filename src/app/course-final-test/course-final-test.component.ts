@@ -61,7 +61,7 @@ export class CourseFinalTestComponent implements OnInit {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
     this._HttpClient
-      .get(`http://localhost:3000/api/assignments/course/${this.courseId}/final-test/download`, {
+      .get(`http://localhost:3000/finalTest/course/${this.courseId}/file`, {
         headers,
         responseType: 'blob'
       })

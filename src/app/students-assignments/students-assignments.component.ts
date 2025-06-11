@@ -19,6 +19,7 @@ export class StudentsAssignmentsComponent implements OnInit {
   submissions: any[] = [];
   selectedCourse: string = '';
   uniqueCourses: string[] = [];
+  isLoading = true;
 
   ngOnInit(): void {
     const token = this._AuthService.getToken?.() || localStorage.getItem('token') || '';
@@ -30,9 +31,10 @@ export class StudentsAssignmentsComponent implements OnInit {
           console.log('API Response:', res);
           this.submissions = Array.isArray(res.submissions) ? res.submissions : [];
           this.extractUniqueCourses();
+          this.isLoading = false;
         },
         error: (err:any) => {
-          console.error('Error fetching submission:', err);
+          this.isLoading = false;
         }
       });
   }

@@ -1,3 +1,4 @@
+import { FinalTestFeedbacksComponent } from './../final-test-feedbacks/final-test-feedbacks.component';
 import { UserService } from './../user.service';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
@@ -6,11 +7,12 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { SubscribedCoursesComponent } from "../subscribed-courses/subscribed-courses.component";
-import { AssignmentsFeedbacksComponent } from "../assignments-feedbacks/assignments-feedbacks.component";
+import { AssignmentFeedbacksComponent } from "../assignment-feedbacks/assignment-feedbacks.component";
+
 
 @Component({
   selector: 'app-profile',
-  imports: [FormsModule, CommonModule, SubscribedCoursesComponent, AssignmentsFeedbacksComponent],
+  imports: [FormsModule, CommonModule, SubscribedCoursesComponent, FinalTestFeedbacksComponent, FinalTestFeedbacksComponent, AssignmentFeedbacksComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })

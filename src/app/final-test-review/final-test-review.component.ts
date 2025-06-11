@@ -19,8 +19,10 @@ export class FinalTestReviewComponent implements OnInit {
   submissions: any[] = [];
   courses: { courseId: string, courseName: string }[] = [];
   selectedCourse: string = '';
+  isLoading = true; // Add loading state
 
   ngOnInit(): void {
+    this.isLoading = true; // Set loading to true on init
     this.loadSubmissions();
   }
 
@@ -50,9 +52,11 @@ export class FinalTestReviewComponent implements OnInit {
             this.selectedCourse = ''; // ✅ Select All Courses by default
             this.updateSubmissions();
           }
+          this.isLoading = false; // Set loading to false on data load
         },
         error: (err) => {
           console.error('Error fetching submissions:', err);
+          this.isLoading = false; // Set loading to false on error
         }
       });
   }
@@ -97,9 +101,10 @@ updateSubmissions() {
   }
 
   giveFeedback(submission: any) {
-    let body ={
-      'Feedback:': submission.feedback,'Rating:': submission.rating
-    }
+    let body = {
+    feedback: submission.feedback,
+    rating: submission.rating
+  };
     const token = this._AuthService.getToken?.() || localStorage.getItem('token') || '';
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     this._HttpClient.post(`http://localhost:3000/finalTest/${submission._id}/grade`, body, { headers }).subscribe({
