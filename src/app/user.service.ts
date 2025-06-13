@@ -44,6 +44,7 @@ export class UserService {
   Register(userData: any): Observable<any> {
     return this._HttpClient.post(`${this.BaseUrl}/user/`, userData);
   }
+  
   Login(userData: any): Observable<any> {
     return this._HttpClient.post(`${this.BaseUrl}/user/login`, userData);
 

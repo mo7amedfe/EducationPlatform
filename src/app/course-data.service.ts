@@ -19,14 +19,6 @@ export class CourseDataService {
       headers 
     });
   }
-  // getLessonAssignment(lessonId: string) :Observable<any> {
-  //   const token = this._AuthService.getToken();
-  //   const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-  //   return this._HttpClient.get( `http://localhost:3000/leason/${lessonId}/assignment/download`, { 
-  //     headers,
-  //     responseType: 'blob' as 'blob'
-  //   });
-  // }
 getLessonAssignment(lessonId: string): Observable<any> {
   const token = this._AuthService.getToken();
   const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);

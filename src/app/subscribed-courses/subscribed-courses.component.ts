@@ -13,29 +13,32 @@ import { Router, RouterModule } from '@angular/router';
 export class SubscribedCoursesComponent implements OnInit {
   courses: any[] = [];
 isLoading: boolean = false;
+
   constructor(
     private _HttpClient: HttpClient,
     private _AuthService: AuthService,
     private _Router: Router
   ) {}
 
-  navigateToCourseDetails(courseId: string) {
-    console.log(courseId);
-    this._Router.navigate(['/subscribed-courses', courseId]);
-  }
 
   ngOnInit(): void {
     this.isLoading = true;
     const token = this._AuthService.getToken();
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    this._HttpClient
-      .get('http://localhost:3000/order/enrolled-courses', { headers })
+    this._HttpClient.get('http://localhost:3000/order/enrolled-courses', { headers })
       .subscribe({
         next: (res: any) => {
           this.isLoading = false;
           this.courses = res.courses;
-          console.log(this.courses);
+        },
+        error:(err)=> {
+            console.log(err);  
         },
       });
+  }
+  
+  navigateToCourseDetails(courseId: string) {
+
+    this._Router.navigate([`/subscribed-courses/${courseId}` ]);
   }
 }

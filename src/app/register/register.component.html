@@ -29,6 +29,7 @@
       <input class="form-control" formControlName="cPassword" type="password" />
       <div *ngIf="RegisterForm.get('cPassword')?.touched && RegisterForm.get('cPassword')?.invalid" class="text-danger">
         <small *ngIf="RegisterForm.get('cPassword')?.errors?.['required']">Confirm Password is required</small>
+        
       </div>
 
       <label>Gender</label>
@@ -44,6 +45,7 @@
       <button class="btn btn-info my-3" type="submit" [disabled]="RegisterForm.invalid">
         Submit
       </button>
+      
     </form>
 
     <div *ngIf="isRegisterSuccessful" class="alert alert-success mt-2">

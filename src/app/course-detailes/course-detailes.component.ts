@@ -85,8 +85,10 @@ export class CourseDetailesComponent implements OnInit {
 
     this._HttpClient.get('http://localhost:3000/course/').subscribe({
       next: (res) => {
+        console.log(res);
+        
         this.courses = res;
-        this.course = this.courses.find((c: any) => c._id === this.id);
+        this.course = this.courses.find((course: any) => course._id === this.id);
         this.checkIfInCart();
         this.courseSchedules = this.course.schedules;
         console.log('Course Schedules:', this.courseSchedules);

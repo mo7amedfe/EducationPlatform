@@ -29,11 +29,11 @@ export class LoginComponent {
   login() {
     this.errorMessage = null;
     this._UserService.Login(this.LoginForm.value).subscribe({
-      next: (data) => {
-        const token = data.userToken;
+      next: (res) => {
+        const token = res.userToken;
         localStorage.setItem('token', token);
         this._AuthService.setIsLogin(true);
-        this._UserService.setScore(data.score);
+        this._UserService.setScore(res.score);
         this._Router.navigate(['/home']);
       },
       error: (err) => {

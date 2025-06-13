@@ -14,7 +14,7 @@ import { Observable } from 'rxjs';
 export class CoursesComponent implements OnInit {
   constructor(private _HttpClient: HttpClient) { }
   courses: any = []
-  isLoading = true;
+  isLoading:boolean = true;
 
   ngOnInit(): void {
     this.isLoading = true;
@@ -28,7 +28,6 @@ export class CoursesComponent implements OnInit {
         this.isLoading = false;
       }
     })
-
   }
 
   getCoarses(): Observable<any> {

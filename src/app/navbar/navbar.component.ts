@@ -16,9 +16,9 @@ export class NavbarComponent implements OnInit {
   isLogin: boolean = false;
   currentRoute: string = '';
 
-  navs = [{
-    name: "Home", link: "/home"
-  }, {
+  navs = [
+    {name: "Home", link: "/home"},
+     {
     name: "Placement Test", link: "/PlacementTest"
 
   }, {

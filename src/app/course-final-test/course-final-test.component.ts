@@ -20,6 +20,7 @@ export class CourseFinalTestComponent implements OnInit {
   isLoadingFinalTest = false;
   showMessage: boolean = false;
   message: any = '';
+  isPassed: boolean = false;
 
   constructor(
     private _HttpClient: HttpClient,
@@ -32,38 +33,42 @@ export class CourseFinalTestComponent implements OnInit {
     this.loadFinalTest();
   }
 
-
   loadFinalTest() {
     this.isLoadingFinalTest = true;
-    const token = this._AuthService.getToken?.() || localStorage.getItem('token') || '';
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
-    this._HttpClient.get(`http://localhost:3000/finalTest/course/${this.courseId}/file`, {
-      headers,
-      responseType: 'blob'
-    }).subscribe({
-      next: (res: Blob) => {
-        const fileURL = URL.createObjectURL(res);
-        this.finalTestUrl = fileURL;
-        this.isLoadingFinalTest = false;
-      },
-      error: (err) => {
-        console.log(err);
-        
-        this.isLoadingFinalTest = false;
-         this.message = err.error?.message || null;
-        this.showNotification(this.message, false);
-      }
-    });
-  }
-  DownloadFinalTest() {
-    const token = this._AuthService.getToken?.() || localStorage.getItem('token') || '';
+    const token =
+      this._AuthService.getToken?.() || localStorage.getItem('token') || '';
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
     this._HttpClient
       .get(`http://localhost:3000/finalTest/course/${this.courseId}/file`, {
         headers,
-        responseType: 'blob'
+        responseType: 'blob',
+      })
+      .subscribe({
+        next: (res: Blob) => {
+          this.isPassed = true;
+          const fileURL = URL.createObjectURL(res);
+          this.finalTestUrl = fileURL;
+          this.isLoadingFinalTest = false;
+        },
+        error: (err) => {
+          console.log(err);
+          this.isPassed=false
+          this.isLoadingFinalTest = false;
+          this.message = err.error?.message || null;
+          this.showNotification(this.message, false);
+        },
+      });
+  }
+  DownloadFinalTest() {
+    const token =
+      this._AuthService.getToken?.() || localStorage.getItem('token') || '';
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    this._HttpClient
+      .get(`http://localhost:3000/finalTest/course/${this.courseId}/file`, {
+        headers,
+        responseType: 'blob',
       })
       .subscribe({
         next: (res: Blob) => {
@@ -96,7 +101,7 @@ export class CourseFinalTestComponent implements OnInit {
     const formData = new FormData();
     formData.append('finalTestFile', this.selectedFile);
 
-    const token = this._AuthService.getToken?.() || localStorage.getItem('token') || '';
+    const token =this._AuthService.getToken?.() || localStorage.getItem('token') || '';
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
     this._HttpClient
@@ -113,16 +118,18 @@ export class CourseFinalTestComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error uploading file:', err);
-          const errorMessage = err.error?.message || 'Error uploading file. Please try again.';
+          const errorMessage =
+            err.error?.message || 'Error uploading file. Please try again.';
           this.showNotification(errorMessage, false);
           this.isUploading = false;
-        }
+        },
       });
   }
 
   showNotification(message: string, isSuccess: boolean = true) {
     this.message = message;
     this.showMessage = true;
+    
     setTimeout(() => {
       this.showMessage = false;
     }, 4000);

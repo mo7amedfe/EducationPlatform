@@ -34,42 +34,32 @@ export class EnrolledCourseDataComponent implements OnInit {
     private _AuthService: AuthService,
     private _HttpClient: HttpClient
   ) {}
-  Student_ID: any;
+
   ngOnInit(): void {
-    const token =
-      this._AuthService.getToken?.() || localStorage.getItem('token') || '';
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
-
-    this.Student_ID = this._AuthService.getDecodedToken()?._id || '';
     this.courseId = this._ActivatedRoute.snapshot.params['id'];
-    this._CourseDataService.getCourseData(this.courseId).subscribe((res) => {
-      console.log(res);
-      
-      this.courseData = res;
-      if (this.courseData.courselessons.length > 0) {
-        this.selectedLesson = this.courseData.courselessons[0];
-      }
-      this.isLoading = false;
-    }, error => {
-      this.isLoading = false;
+    this._CourseDataService.getCourseData(this.courseId).subscribe({
+      next: (res: any) => {
+        this.courseData = res;
+        if (this.courseData.courselessons.length > 0) {
+          this.selectedLesson = this.courseData.courselessons[0];
+        }
+        this.isLoading = false;
+      },
+      error: (err: any) => {
+        console.log(err);
+        this.isLoading = false;
+      },
     });
-     
   }
 
- selectLesson(lesson: any) {
-  this.selectedLesson = lesson;
-  console.log('Selected lesson:', this.selectedLesson);
-  
-        this.selectedFile = null; // Reset selected file when changing lesson
-        this.uploadMessage = ''; // Reset upload message when changing lesson
-        if (this.fileInput) {
-    this.fileInput.nativeElement.value = '';
+  selectLesson(lesson: any) {
+    this.selectedLesson = lesson;
+    this.selectedFile = null; 
+    this.uploadMessage = ''; 
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = '';
+    }
   }
- 
-
-}
-
 
   onFileSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
@@ -105,8 +95,8 @@ export class EnrolledCourseDataComponent implements OnInit {
         next: (res: any) => {
           this.uploadMessage = 'Assignment uploaded successfully!';
           this.selectedFile = null;
-          console.log(res);
-          console.log(this.selectedLesson.submissions);
+    
+    
           this.selectedLesson.submissions.push(res.submission);
         },
         error: (err) => {
@@ -125,17 +115,19 @@ export class EnrolledCourseDataComponent implements OnInit {
   getAssignment() {
     if (!this.selectedLesson) return;
 
-    this._CourseDataService.getLessonAssignment(this.selectedLesson._id).subscribe((blob: Blob) => {
-    const contentDisposition = 'attachment; filename=assignment.pdf'; // ممكن تجيب الاسم من الـ header في backend لو حبيت
+    this._CourseDataService
+      .getLessonAssignment(this.selectedLesson._id)
+      .subscribe((blob: Blob) => {
+        const contentDisposition = 'attachment; filename=assignment.pdf'; 
 
-    const fileName = 'assignment.pdf'; // أو تاخده من الـ Content-Disposition header لو عايز ديناميكي
+        const fileName = 'assignment.pdf'; 
 
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.download = fileName;
-    link.click();
-    window.URL.revokeObjectURL(link.href);
-  });
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = fileName;
+        link.click();
+        window.URL.revokeObjectURL(link.href);
+      });
   }
   downloadSubmission(submission_id: string) {
     if (!this.selectedLesson) return;

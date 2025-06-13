@@ -54,6 +54,8 @@ export class PlacementTestComponent implements OnInit {
 
 
   }
+
+  
   getQuestions(): Observable<any> {
     return this._HttpClient.get(`http://localhost:3000/PT/show`)
   }

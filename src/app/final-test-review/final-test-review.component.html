@@ -8,6 +8,8 @@
 
 <!-- Final Test Submissions List -->
 <div class="container" *ngIf="!isLoading && (submissions.length > 0 || selectedCourse === ''); else noSubmissions">
+  <h2 class="mb-4">Students Final Tests Submitions</h2>
+
   <div class="mb-3">
     <label for="courseSelect" class="form-label fw-bold">Filter by Course</label>
     <select id="courseSelect" class="form-select" [(ngModel)]="selectedCourse" (change)="onCourseChange()">

@@ -1,4 +1,4 @@
-<div *ngIf="message!=null" class="container-fluid">
+<div *ngIf="isPassed" class="container-fluid">
   <!-- Toast Notification -->
   <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999">
     <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true" *ngIf="showMessage">
@@ -78,7 +78,10 @@
   </div>
 
 </div>
-<div *ngIf="message == null" class="alert alert-warning d-flex align-items-center my-5 shadow-sm" role="alert">
+
+
+
+<div *ngIf="!isPassed" class="alert alert-warning d-flex align-items-center my-5 shadow-sm" role="alert">
   <i class="fas fa-exclamation-triangle fa-2x me-3 text-warning"></i>
   <div>
     <h4 class="alert-heading mb-1">Final Test Not Available</h4>
