@@ -1,0 +1,59 @@
+<div class="container mt-5">
+  <div class="row">
+    <h1>Register now.</h1>
+
+    <form [formGroup]="RegisterForm" (ngSubmit)="regiser()">
+      <label>Name</label>
+      <input class="form-control" formControlName="username" type="text" />
+      <div *ngIf="RegisterForm.get('username')?.touched && RegisterForm.get('username')?.invalid" class="text-danger">
+        <small *ngIf="RegisterForm.get('username')?.errors?.['required']">Name is required</small>
+        <small *ngIf="RegisterForm.get('username')?.errors?.['minlength']">Name must be at least 3 characters</small>
+      </div>
+
+      <label>Email</label>
+      <input class="form-control" formControlName="email" type="email" />
+      <div *ngIf="RegisterForm.get('email')?.touched && RegisterForm.get('email')?.invalid" class="text-danger">
+        <small *ngIf="RegisterForm.get('email')?.errors?.['required']">Email is required</small>
+        <small *ngIf="RegisterForm.get('email')?.errors?.['email']">Invalid email format</small>
+      </div>
+
+      <label>Password</label>
+      <input class="form-control" formControlName="password" type="password" />
+      <div *ngIf="RegisterForm.get('password')?.touched && RegisterForm.get('password')?.invalid" class="text-danger">
+        <small *ngIf="RegisterForm.get('password')?.errors?.['required']">Password is required</small>
+        <small *ngIf="RegisterForm.get('password')?.errors?.['minlength']">Minimum 8 characters</small>
+        <small *ngIf="RegisterForm.get('password')?.errors?.['pattern']">Weak password format</small>
+      </div>
+
+      <label>Confirm Password</label>
+      <input class="form-control" formControlName="cPassword" type="password" />
+      <div *ngIf="RegisterForm.get('cPassword')?.touched && RegisterForm.get('cPassword')?.invalid" class="text-danger">
+        <small *ngIf="RegisterForm.get('cPassword')?.errors?.['required']">Confirm Password is required</small>
+        
+      </div>
+
+      <label>Gender</label>
+      <select class="form-control" formControlName="gender">
+        <option value="" disabled selected>Select gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+      <div *ngIf="RegisterForm.get('gender')?.touched && RegisterForm.get('gender')?.invalid" class="text-danger">
+        <small *ngIf="RegisterForm.get('gender')?.errors?.['required']">Gender is required</small>
+      </div>
+
+      <button class="btn btn-info my-3" type="submit" [disabled]="RegisterForm.invalid">
+        Submit
+      </button>
+      
+    </form>
+
+    <div *ngIf="isRegisterSuccessful" class="alert alert-success mt-2">
+      Register succeeded. <a [routerLink]="['/login']" class="text-info">Click here to login</a>
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-danger mt-2">
+      {{ errorMessage }}
+    </div>
+  </div>
+</div>

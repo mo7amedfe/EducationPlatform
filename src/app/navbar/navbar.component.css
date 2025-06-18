@@ -1,0 +1,39 @@
+.navbar {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+z-index: 1000;
+background-color: #1c2b33 ;
+
+}
+
+ 
+ .nav-list {
+     margin: 0 10px;
+ }
+
+ .link{
+    color: rgb(118, 118, 118);
+    text-decoration: none;
+    font-size: large;
+ }
+
+ .active-link {
+    color: #000 !important;
+    font-weight: 800 !important;
+}
+.profile{
+    /* width: 130px; */
+}
+.profile-img{
+    width: 54px;
+    height: 54px;
+    margin-right: 5px;
+}
+
+.active-profile{
+background-color: #dadada;
+border: #000 2px solid;
+background-color: rgba(0, 0, 0, 0.3);
+}

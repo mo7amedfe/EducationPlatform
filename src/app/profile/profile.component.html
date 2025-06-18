@@ -1,0 +1,64 @@
+<div class="profile-bg">
+  <div class="profile-card shadow-lg rounded-4 mx-auto">
+    <div class="row g-0 align-items-center">
+      <!-- Profile Image Section -->
+      <div class="col-md-4 d-flex flex-column align-items-center justify-content-center p-4">
+        <div *ngIf="!isEditing" class="profile-img-container mb-3">
+          <img class="profile-img" [src]="imagePreview || 'assets/images/avatar-3814049_1280.png'" alt="Profile Image">
+        </div>
+        <div *ngIf="isEditing" class="profile-img-container mb-3 position-relative" (click)="fileInput.click()">
+          <div class="edit-overlay d-flex align-items-center justify-content-center">
+            <i class="fa-solid fa-pen"></i>
+          </div>
+          <img class="profile-img" [src]="imagePreview || 'assets/images/avatar-3814049_1280.png'" alt="Profile Image">
+          <input type="file" #fileInput accept="image/*" style="display: none" (change)="onFileSelected($event)" />
+        </div>
+      </div>
+      <!-- Profile Info Section -->
+      <div class="col-md-8 p-4">
+        <div *ngIf="!isEditing">
+          <h2 class="profile-title mb-3">{{ user.username }}</h2>
+
+          <p class="profile-info mb-2" *ngIf="isAdmin">
+            <i class="fa-solid fa-user-tie  me-2"></i>
+            Admin
+          </p>
+
+          <p class="profile-info mb-2"><i class="fa-solid fa-envelope me-2"></i>{{ user.email }}</p>
+
+          <p *ngIf="!isAdmin" class="profile-info mb-2">
+            <i class="fa-solid fa-star me-2"></i>
+            Placement Test Score: <span class="fw-bold">{{ user.score || "Not registered in Test" }}</span>
+          </p>
+          <button (click)="isEditing=true" class="btn btn-primary btn-lg mt-3 px-4">Edit Profile</button>
+        </div>
+        <div *ngIf="isEditing">
+          <form (ngSubmit)="updateUserData()" class="edit-form">
+            <div class="mb-3">
+              <label for="username" class="form-label">Name</label>
+              <input type="text" class="form-control" id="username" [(ngModel)]="updatedUsername" name="username"
+                required />
+            </div>
+            <p class="profile-info mb-2"><i class="fa-solid fa-envelope me-2"></i>{{ user.email }}</p>
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-success px-4">Save</button>
+              <button type="button" class="btn btn-outline-secondary px-4" (click)="isEditing=false">Cancel</button>
+            </div>
+          </form>
+          <div *ngIf="message" class="alert alert-info mt-3">
+            {{ message }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container mt-5">
+  <div class="row ">
+    <app-subscribed-courses *ngIf="!isAdmin"></app-subscribed-courses>
+    <app-assignment-feedbacks *ngIf="!isAdmin"></app-assignment-feedbacks>
+    <app-final-test-feedbacks *ngIf="!isAdmin"></app-final-test-feedbacks>
+  </div>
+</div>
+

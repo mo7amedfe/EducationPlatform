@@ -1,0 +1,32 @@
+.toast-container {
+  z-index: 1050;
+}
+
+.toast {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.toast-header {
+  color: white;
+  border-bottom: none;
+}
+
+.toast-header.bg-success {
+  background-color: #28a745 !important;
+}
+
+.toast-header.bg-danger {
+  background-color: #dc3545 !important;
+}
+
+.toast-body {
+  padding: 1rem;
+  color: #2c3e50;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
