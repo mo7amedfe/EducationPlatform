@@ -1,0 +1,156 @@
+<div class="container py-5">
+    <!-- Loader Section -->
+    <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center" style="min-height: 300px;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <span class="ms-3">Loading course data...</span>
+    </div>
+
+    <!-- Main Content -->
+    <div *ngIf="!isLoading">
+        <div class="row">
+            <!-- Course Header -->
+            <div class="col-12 mb-4">
+                <div class="course-header bg-white rounded-3 shadow-sm p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-3">
+                            <img [src]="courseData.courseImage?.secure_url" 
+                                 [alt]="courseData.courseName"
+                                 class="img-fluid rounded-3">
+                        </div>
+                        <div class="col-md-9">
+                            <h2 class="course-title mb-3">{{ courseData.courseName }}</h2>
+                            <p class="course-description text-muted">{{ courseData.courseDescription }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lessons Sidebar -->
+            <div class="col-md-3">
+                <div class="lessons-sidebar bg-white rounded-3 shadow-sm p-3">
+                    <h4 class="sidebar-title mb-3">Course Lessons</h4>
+                    <ul class="lessons-list list-unstyled">
+                        <li class="lesson-item mb-2" *ngFor="let lesson of courseData.courselessons">
+                            <a (click)="selectLesson(lesson)" 
+                               [class.active]="selectedLesson?._id === lesson._id"
+                               class="lesson-link d-flex align-items-center p-2 rounded-2 text-decoration-none">
+                                <i class="fas fa-play-circle me-2 text-primary"></i>
+                                <span>{{ lesson.title }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- Final Course Test Section -->
+                    <div class="final-test-section mt-4 p-3 bg-light rounded-3 border">
+                        <h5 class="mb-2 text-primary">
+                            <i class="fas fa-clipboard-check me-2"></i>Final Course Test
+                        </h5>
+                        <p class="mb-3 text-muted" style="font-size: 0.95rem;">
+                            Test your knowledge and complete the course by taking the final test.
+                        </p>
+                        <a class="btn btn-outline-success w-100" [routerLink]="[`/courseFinalTest/${courseId}`]">
+                            <i class="fas fa-pen-alt me-1"></i>Start Final Test
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="col-md-9">
+                <div class="content-area bg-white rounded-3 shadow-sm p-4">
+                    <div *ngIf="selectedLesson" class="lesson-content">
+                        <h3 class="content-title mb-4">{{ selectedLesson.title }}</h3>
+                        <p class="lesson-description mb-4">{{ selectedLesson.description }}</p>
+                        
+                        <!-- Video Player -->
+                        <div class="video-container mb-4">
+                            <video *ngIf="selectedLesson.video?.secure_url"
+                                   [src]="selectedLesson.video.secure_url"
+                                   controls
+                                   class="w-100 rounded-3">
+                            </video>
+                        </div>
+
+                        <!-- Assignments Section -->
+                        <div *ngIf="selectedLesson.assignment" class="assignments-section">
+                            <h4 class="assignments-title mb-4">
+                                <i class="fas fa-tasks me-2"></i>Assignment
+                            </h4>
+                            <div class="assignment-card mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="assignment-meta mb-2">
+                                            <span class="assignment-title fw-bold">{{ selectedLesson.assignment.title }}</span>
+                                            <span class="ms-3 text-muted">
+                                                <i class="far fa-calendar-alt me-1"></i>
+                                                Due: {{ selectedLesson.assignment.dueDate | date:'mediumDate' }}
+                                            </span>
+                                        </div>
+                                        <div class="assignment-desc mb-2">
+                                            {{ selectedLesson.assignment.description }}
+                                        </div>
+                                        <div class="assignment-actions mt-3">
+                                         
+                                            <a (click)="getAssignment()"
+                                               class="btn btn-outline-secondary">
+                                                <i class="fas fa-download me-1"></i>Download PDF
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Submissions Section -->
+                            <div *ngIf="selectedLesson.submissions?.length > 0" class="mt-4">
+                                <h5>Submissions</h5>
+                                <ul class="list-group">
+                                    <li *ngFor="let submission of selectedLesson.submissions" class="list-group-item">
+                                        <span>
+                                            <i class="far fa-clock me-1"></i>
+                                            Submitted: {{ submission.submittedAt | date:'medium' }}
+                                        </span>
+                                        <a (click)="downloadSubmission(submission._id)"
+                                           class="btn btn-sm btn-primary ms-2">
+                                            <i class="fas fa-file-pdf me-1"></i>Download Submission
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div *ngIf="!selectedLesson.submissions?.length" class="text-muted mt-3">
+                                No submissions yet.
+                            </div>
+                        </div>
+
+                        <!-- No Assignment Message -->
+                        <div *ngIf="!selectedLesson.assignment" class="no-assignments text-center py-4">
+                            <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
+                            <h5>No Assignment Available</h5>
+                            <p class="text-muted">There is no assignment for this lesson yet.</p>
+                        </div>
+                    </div>
+
+                    <!-- Student Assignment Upload Section -->
+                    <div class="assignment-upload mt-4">
+                        <h5>Submit Your Assignment</h5>
+                        <div>
+                            <div class="mb-2">
+                                <input #fileInput type="file" class="form-control" (change)="onFileSelected($event)" accept=".pdf" required>
+                            </div>
+                            <button type="submit" class="btn btn-success" (click)="onAssignmentUpload()" [disabled]="!selectedFile">Upload PDF</button>
+                        </div>
+                        <div *ngIf="uploadMessage" class="mt-2 alert alert-info">
+                            {{ uploadMessage }}
+                        </div>
+                    </div>
+
+                    <div *ngIf="!selectedLesson" class="placeholder-content text-center py-5">
+                        <i class="fas fa-book-open fa-3x text-primary mb-3"></i>
+                        <h4>Select a Lesson</h4>
+                        <p class="text-muted">Choose a lesson from the sidebar to begin learning</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

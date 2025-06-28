@@ -1,0 +1,57 @@
+<div class="my-3 border-1 border py-1 shadow-sm">
+<h3>All Users</h3>
+<div class="table-responsive">
+    <!-- Loader -->
+    <div *ngIf="isUsersLoading" class="d-flex justify-content-center align-items-center py-4">
+        <div class="spinner-border text-primary me-2" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <span class="text-secondary">Loading users...</span>
+    </div>
+    <!-- Users Table -->
+    <table *ngIf="!isUsersLoading" class="table table-bordered table-striped align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Profile Pic</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Gender</th>
+                <th>Created At</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let user of allUsers; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td class="text-center">
+                    <img *ngIf="user.profile_pic?.secure_url; else noPic" [src]="user.profile_pic.secure_url"
+                        alt="Profile" width="40" height="40" class="rounded-circle" />
+                    <ng-template #noPic>
+                        <span class="text-muted">No Image</span>
+                    </ng-template>
+                </td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.role }}</td>
+                <td>{{ user.gender }}</td>
+                <td>{{ user.createdAt | date:'short' }}</td>
+                <td class="text-center">
+                    <button (click)="DeleteUser(user)" class="btn btn-danger">Delete User</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div></div>
+
+<div [ngClass]="{'showNotification': IsNotificationVisible,' alert-success': isNotificationSuccess,' alert-danger': !isNotificationSuccess}"
+    class="notification alert d-flex p-3 shadow-lg">
+    <p class="m-0 p-0 ">
+        {{notificationMessage}}
+    </p>
+    <button (click)="IsNotificationVisible=false" class="btn"
+        [ngClass]="{'btn-outline-success': isNotificationSuccess, 'btn-out-danger': !isNotificationSuccess}">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+</div>

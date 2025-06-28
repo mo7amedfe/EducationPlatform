@@ -1,0 +1,22 @@
+<div class="container">
+    <h1>Our Courses</h1>
+
+    <!-- Loader -->
+    <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center my-5" style="min-height: 200px;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <span class="ms-3">Loading courses...</span>
+    </div>
+
+    <!-- Courses List -->
+    <div class="row" *ngIf="!isLoading">
+        <div *ngFor="let course of courses" class="col-md-6 my-3">
+            <a [routerLink]="[`/subscribed-courses/${course._id}`]" class="text-decoration-none">
+                <app-card [title]="course.title" [description]="course.description" [price]="course.price"
+                    [imageUrl]="course.imageurl?.secure_url">
+                </app-card>
+            </a>
+        </div>
+    </div>
+</div>

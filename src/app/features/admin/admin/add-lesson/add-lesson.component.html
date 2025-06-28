@@ -1,0 +1,74 @@
+<div class="card shadow-sm my-3 p-2">
+    <h3>Add Lesson</h3>
+
+    <form class="" [formGroup]="AddLesson" (ngSubmit)="AddLessonSubmit()">
+
+        <div class="dropdown">
+            <button type="button" (click)="getAllcourses() ; $event.stopPropagation()"
+                class="btn border-1 w-100 border dropdown-toggle">
+                {{selectedCourse}}
+            </button>
+
+            <div [ngClass]="{'show': isListShown}" *ngIf="!isCourseListLoading" class="dropdown-menu  w-100">
+
+                <a *ngFor="let Course of allCourses" (click)="setSelectedCourse(Course)"
+                    class="dropdown-item text-center cursorpointer">{{Course.title}}</a>
+
+            </div>
+            <div [ngClass]="{'show': isListShown}" *ngIf="isCourseListLoading" class="dropdown-menu w-100">
+
+                <a class="dropdown-item disabled text-center">Loading...</a>
+
+            </div>
+        </div>
+
+
+
+        <label for="">Lesson Title</label>
+        <input type="text" formControlName="LessonTitle" class="form-control">
+
+        <label for="LessonDescription">Lesson Description</label>
+        <textarea formControlName="LessonDescription" class="form-control"></textarea>
+
+        <h5 for="">Lesson Video</h5>
+        <input class="form-control" type="file" accept="video/*" (change)="onVideoSelected($event)" />
+        <div *ngIf="videoPreview"
+            class="w-100 text-center d-flex flex-wrap justify-content-center align-items-center mt-2">
+            <video [src]="videoPreview" controls class="w-100 rounded-2"></video>
+        </div>
+        <h5 class="my-3" for="">Lesson Assignment</h5>
+        <form [formGroup]="assignmentForm">
+
+            <label for="">Assignment Title</label>
+            <input type="text" formControlName="title" class="form-control" required>
+
+            <label for="">Assignment Description</label>
+            <textarea formControlName="description" class="form-control" required></textarea>
+
+            <label for="">dueDate</label>
+            <input type="date" class="form-control" formControlName="dueDate" required />
+            <label for="">File</label>
+            <input type="file" class="form-control" accept="application/pdf" (change)="onAssignmentSelected($event)"
+                required />
+        </form>
+
+        <button [ngClass]="{'disabled': isLoading}" class="btn btn-primary mt-3" type="submit">
+            <span *ngIf="isLoading" class="loader"></span>
+
+            <span *ngIf="!isLoading">Add Lesson</span>
+        </button>
+    </form>
+
+</div>
+
+
+<div [ngClass]="{'showNotification': IsNotificationVisible,' alert-success': isNotificationSuccess,' alert-danger': !isNotificationSuccess}"
+    class="notification alert d-flex p-3 shadow-lg ">
+    <p class="m-0 p-0 ">
+        {{notificationMessage}}
+    </p>
+    <button (click)="IsNotificationVisible=false" class="btn"
+        [ngClass]="{'btn-outline-success': isNotificationSuccess, 'btn-out-danger': !isNotificationSuccess}">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+</div>

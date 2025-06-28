@@ -1,0 +1,108 @@
+<div class="card p-3 shadow-sm my-3">
+    <h3>Add course</h3>
+
+    <form [formGroup]="AddCourse" (ngSubmit)="AddCourseSubmit()">
+        <label for="courseName">Name</label>
+        <input type="text" formControlName="title" class="form-control">
+
+        <label for="courseDescription">Description</label>
+        <textarea formControlName="Description" class="form-control"></textarea>
+
+        <label for="courseDescription">Price</label>
+        <input type="number" formControlName="price" class="form-control">
+
+        <label for="">Course Image</label>
+        <input type="file" class="form-control" (change)="onImageFileSelected($event)" accept="image/*">
+
+
+        <div *ngIf="imagePreview"
+            class="w-50 text-center d-flex justify-content-center align-items-center mt-2  overflow-hidden">
+            <img [src]="imagePreview" alt="Course Image Preview" class="w-25 rounded-2">
+        </div>
+
+        <div class="courseSechedules mt-3">
+            <label for="courseSchedule">Course Schedule</label>
+            <div class="d-flex row ">
+                <div class="d-flex flex-wrap gap-3 my-2">
+                    <div class="dropdown col-md-4">
+                        <label for="">Day</label>
+                        <button type="button" (click)="show_hideDayList(); $event.stopPropagation()"
+                            class="btn border-1 w-100 border dropdown-toggle">
+                            {{Day}}
+                        </button>
+
+                        <div [ngClass]="{'show': isDayListShown}" class="dropdown-menu w-100">
+                            <a *ngFor="let day of Days" (click)="SetDay(`${day}`)"
+                                class="dropdown-item text-center cursorpointer">{{day}}</a>
+                        </div>
+
+                    </div>
+                    <div class="col-md-4">
+                        <label for="">Time</label>
+                        <input class="form-control" type="time" [value]="time" (input)="SetTime($event) " />
+
+
+                    </div>
+
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button [disabled]="Day === 'Select Day' || time === 'Select Time'"
+                            (click)="AddSchedule(); $event.stopPropagation()" type="button"
+                            class="btn btn-outline-success">
+                            Add Schedule
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-md-10 my-2">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover table-borderless table-primary align-middle">
+                            <thead class="table-light">
+
+                                <tr class="text-center">
+                                    <th>Day</th>
+                                    <th>Time</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider text-center">
+                                <tr class="table-primary" *ngFor="let schedule of schedules; let index = index">
+                                    <td>{{schedule.day}}</td>
+                                    <td>{{schedule.time}}</td>
+                                    <td>
+                                        <button (click)="removeScheduleItem(index) ; $event.stopPropagation()"
+                                            type="button" class="btn btn-outline-danger">Delete</button>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                            <tfoot>
+
+                            </tfoot>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+
+        <button [ngClass]="{'disabled': isLoading}" class="btn btn-primary mt-3" type="submit">
+            <span *ngIf="isLoading" class="loader"></span>
+            <span *ngIf="!isLoading">Add course</span>
+        </button>
+    </form>
+</div>
+
+
+
+<div [ngClass]="{'showNotification': IsNotificationVisible,' alert-success': isNotificationSuccess,' alert-danger': !isNotificationSuccess}"
+    class="notification alert d-flex p-3 shadow-lg ">
+    <p class="m-0 p-0 ">
+        {{notificationMessage}}
+    </p>
+    <button (click)="IsNotificationVisible=false" class="btn"
+        [ngClass]="{'btn-outline-success': isNotificationSuccess, 'btn-out-danger': !isNotificationSuccess}">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+</div>

@@ -1,0 +1,48 @@
+<nav class="navbar navbar-expand-md navbar-dark">
+    <div class="container">
+        <a class="w-25 d-flex align-items-center justify-content-center">
+            <img class="w-25" src="assets/images/logowhite.png" alt="logo">
+        </a>
+
+
+        <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse"
+            data-bs-target="#collapsibleNavId" aria-controls="collapsibleNavId" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-start" id="collapsibleNavId">
+            
+            <ul class="navbar-nav me-auto mt-2 mt-lg-0">
+
+                <li *ngFor="let nav of navs" class="nav-item" [ngClass]="{'active-link': currentRoute === nav.link}">
+                    <a class="nav-link" [routerLink]="[nav.link]">{{ nav.name }}</a>
+                </li>
+
+            </ul>
+
+            <div class="d-flex justify-content-end">
+
+                <button *ngIf="isLogin" (click)="logout()" class="btn btn-outline-danger">Logout</button>
+                <button *ngIf="!isLogin" (click)="login()" class="btn btn-outline-success mx-2">Login</button>
+                <button *ngIf="!isLogin" (click)="register()" class="btn btn-outline-light">Register</button>
+
+            </div>
+            <a class="text-decoration-none" [routerLink]="['/profile']" >
+                <div *ngIf="isLogin" class="profile d-flex align-items-center justify-content-between mx-2 p-1 rounded-3" [ngClass]="{'active-profile': currentRoute == '/profile'}">
+                    <div class="rounded-circle overflow-hidden profile-img">
+                        <img class="w-100" [src]="imagePreview || 'assets/images/avatar-3814049_1280.png'"  alt="">
+                    </div>
+                    <div class="">
+                        <p class="m-0 text-light ">
+                            {{user.username}}
+                        </p>
+
+                    </div>
+                </div>
+            </a>
+
+
+        </div>
+
+    </div>
+</nav>

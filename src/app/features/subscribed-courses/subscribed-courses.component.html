@@ -1,0 +1,58 @@
+<div *ngIf="courses.length!=0" class="timetable-container py-5">
+  <div class="container">
+    <h2 class="text-center mb-4">My Course Schedule</h2>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Course</th>
+          <th>Day</th>
+          <th>Time</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let course of courses">
+          <td>{{ course.title }}</td>
+          <td>{{ course.selectedSchedule.day }}</td>
+          <td>{{ course.selectedSchedule.time }}</td>
+
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <div class="container mt-5">
+    <h2 class="text-center mb-4">My Enrolled Courses</h2>
+    <div class="row g-4">
+      <div (click)="navigateToCourseDetails(course.courseId)" style="cursor: pointer;" class="col-md-6 col-lg-4"
+        *ngFor="let course of courses">
+        <div class="card h-100 shadow-sm">
+          <img *ngIf="course.image?.secure_url" [src]="course.image.secure_url" [alt]="course.title"
+            class="card-img-top" style="height: 220px; object-fit: cover;">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ course.title }}</h5>
+            <p class="card-text flex-grow-1">{{ course.description }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="courses.length==0 &&!isLoading " class="d-flex flex-column align-items-center justify-content-center py-5">
+  <img src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png" alt="No Courses" style="width:120px;opacity:0.7;" class="mb-4">
+  <h3 class="text-secondary mb-2">No Courses Enrolled</h3>
+  <p class="text-muted mb-4 text-center" style="max-width: 350px;">
+    You haven't enrolled in any courses yet.<br>
+    Browse our catalog and start learning today!
+  </p>
+  <a [routerLink]="['/home']" class="btn btn-primary px-4">
+    <i class="fas fa-search me-2"></i>Browse Courses
+  </a>
+</div>
+<div *ngIf="isLoading" class="d-flex flex-column align-items-center justify-content-center py-5">
+  <div class="spinner-border text-primary mb-3" style="width: 4rem; height: 4rem;" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  <h5 class="text-secondary">Loading your courses...</h5>
+</div>

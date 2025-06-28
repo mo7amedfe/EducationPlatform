@@ -1,0 +1,172 @@
+<div class="toast-container position-fixed top-0 end-0 p-3">
+  <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true" *ngIf="showMessage">
+    <div class="toast-header" [ngClass]="{'bg-success': message.includes('successfully'), 'bg-danger': message.includes('Error')}">
+      <i class="fas" [ngClass]="{'fa-check-circle': message.includes('successfully'), 'fa-exclamation-circle': message.includes('Error')}"></i>
+      <strong class="me-auto ms-2">Notification</strong>
+      <button type="button" class="btn-close" (click)="showMessage = false"></button>
+    </div>
+    <div class="toast-body">
+      {{ message }}
+    </div>
+  </div>
+</div>
+
+<div class="course-details-container py-5">
+  <!-- Course Details Card -->
+  <div class="course-card shadow-lg rounded-4 mx-auto mb-5">
+    <div class="row g-0 align-items-stretch">
+      <div class="col-md-5 course-image p-3 d-flex align-items-center">
+        <img class="img-fluid w-100 rounded-4" [src]="course.imageurl.secure_url" alt="Course Image" />
+      </div>
+      <div class="col-md-7 course-content p-4">
+        <h2 class="course-title mb-3">{{ course.title }}</h2>
+        <p class="course-description text-muted mb-4">{{ course.description }}</p>
+        
+        <!-- Add Price Section -->
+        <div class="price-section mb-4">
+          <div class="price-tag">
+            <span class="currency">LE</span>
+            <span class="amount">{{ course.price || 0 }}</span>
+            <span class="period">/course</span>
+          </div>
+          <div class="price-features">
+            <div class="feature-item">
+              <i class="fas fa-check-circle text-success me-2"></i>
+              <span>Full course access</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check-circle text-success me-2"></i>
+              <span>Certificate included</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check-circle text-success me-2"></i>
+              <span>Lifetime access</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="course-actions mt-4">
+          <!--       
+          <button 
+            *ngIf="isInCart"
+            class="btn btn-danger btn-lg me-3" 
+            (click)="removeFromCart()">
+            <i class="fas fa-trash me-2"></i>Remove from Cart
+          </button> -->
+          <!-- <button class="btn btn-outline-secondary btn-lg">
+            <i class="fas fa-share-alt me-2"></i>Share
+          </button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Schedule Section -->
+  <div class="schedule-section shadow-lg rounded-4 mx-auto mb-5" *ngIf="courseSchedules.length">
+    <div class="p-4">
+      <h3 class="schedule-title mb-4">
+        <i class="fas fa-calendar-alt me-2"></i>Course Schedule
+      </h3>
+
+      <div class="schedule-table-container">
+        <table class="schedule-table">
+          <thead>
+            <tr>
+              <th><i class="fas fa-clock me-2"></i>Time</th>
+              <th><i class="fas fa-calendar-day me-2"></i>Day</th>
+              <th><i class="fas fa-info-circle me-2"></i>Details</th>
+              <th><i class="fas fa-info-circle me-2"></i>Book in this time</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let schedule of course.schedules">
+              <td>{{ schedule.time}}</td>
+              <td>{{ schedule.day }}</td>
+              <td>
+                <span class="badge bg-success">Available</span>
+              </td>
+              <td>
+                <button class="btn btn-primary" 
+                        (click)="addToCart(schedule,id)"
+                        [disabled]="isInCart"
+                        [ngClass]="{'btn-secondary': isInCart}">
+                  <i class="fas" [ngClass]="{'fa-shopping-cart': !isInCart, 'fa-check': isInCart}"></i>
+                  {{ isInCart ? 'Added to Cart' : 'Add to Cart' }}
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Course Duration -->
+  <!-- <div class="comments-section bg-white rounded-4 shadow-lg my-3 mb-5 course-duration-card p-4 rounded-3">
+    <h4 class="duration-title mb-3">Course Duration</h4>
+    <div class="duration-details">
+      <div class="duration-item mb-3">
+        <i class="fas fa-clock me-2"></i>
+        <span>Total Hours: {{totalHours}} hours</span>
+      </div>
+      <div class="duration-item mb-3">
+        <i class="fas fa-calendar-check me-2"></i>
+        <span>Start Date: {{startDate | date:'mediumDate'}}</span>
+      </div>
+      <div class="duration-item">
+        <i class="fas fa-calendar-times me-2"></i>
+        <span>End Date: {{endDate | date:'mediumDate'}}</span>
+      </div>
+    </div>
+
+  </div> -->
+
+  <!-- Comments Section -->
+  <!-- <div class="comments-section shadow-lg rounded-4 mx-auto">
+    <div class="p-4">
+      <h3 class="comments-title mb-4">
+        <i class="fas fa-comments me-2"></i>Comments
+      </h3>
+
+      <div class="add-comment mb-4">
+        <form class="comment-form" (ngSubmit)="submitComment()">
+          <div class="form-group mb-3">
+            <textarea class="form-control" rows="3" placeholder="Write your comment here..." [(ngModel)]="newComment"
+              name="comment" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" [disabled]="!newComment.trim()">
+            <i class="fas fa-paper-plane me-2"></i>Post Comment
+          </button>
+        </form>
+      </div>
+
+      <div class="comments-list">
+
+        <div class="comment-item mb-4" *ngFor="let comment of comments">
+          <div class="d-flex">
+            <div class="comment-avatar me-3">
+              <img [src]="comment.userAvatar || 'assets/images/avatar-3814049_1280.png'" alt="User Avatar"
+                class="rounded-circle">
+            </div>
+            <div class="comment-content flex-grow-1">
+              <div class="comment-header d-flex justify-content-between align-items-center mb-2">
+                <h5 class="comment-author mb-0">{{ comment.userName }}</h5>
+                <small class="text-muted">{{ comment.date | date:'medium' }}</small>
+              </div>
+              <p class="comment-text mb-2">{{ comment.text }}</p>
+              <div class="comment-actions">
+                <button class="btn btn-sm btn-link text-muted me-2">
+                  <i class="fas fa-reply me-1"></i>Reply
+                </button>
+                <button class="btn btn-sm btn-link text-muted">
+                  <i class="far fa-thumbs-up me-1"></i>Like ({{ comment.likes }})
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+</div>

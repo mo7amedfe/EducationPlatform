@@ -1,0 +1,92 @@
+<div *ngIf="isPassed" class="container-fluid">
+  <!-- Toast Notification -->
+  <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999">
+    <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true" *ngIf="showMessage">
+      <div class="toast-header text-white" [ngClass]="{
+        'bg-success': message.toLowerCase().includes('success'), 
+        'bg-danger': !message.toLowerCase().includes('success')
+      }">
+        <i class="fas me-2" [ngClass]="{
+           'fa-check-circle': message.toLowerCase().includes('success'), 
+           'fa-exclamation-circle': !message.toLowerCase().includes('success')
+         }"></i>
+        <strong class="me-auto">Notification</strong>
+        <button type="button" class="btn-close" (click)="showMessage = false" aria-label="Close"></button>
+      </div>
+      <div class="toast-body">
+        {{ message }}
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Main Container -->
+  <div class="container py-5">
+    <!-- Loader -->
+    <div *ngIf="isLoadingFinalTest" class="d-flex justify-content-center align-items-center my-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading Final Test...</span>
+      </div>
+      <span class="ms-3">Loading Final Test...</span>
+    </div>
+
+    <!-- Final Test Download Section -->
+    <div *ngIf="!isLoadingFinalTest && finalTestUrl" class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h3 class="card-title mb-2">
+          <i class="fas fa-clipboard-check me-2 text-primary"></i>
+          Final Course Test
+        </h3>
+
+        <button class="btn btn-outline-primary mb-3" (click)="DownloadFinalTest()">
+          <i class="fas fa-download me-1"></i>
+          Download Test PDF
+        </button>
+      </div>
+    </div>
+
+    <!-- Answer Submission Card -->
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h4 class="card-title mb-3">
+          <i class="fas fa-upload me-2 text-primary"></i>
+          Submit Your Answer
+        </h4>
+
+        <div class="upload-section p-4 border rounded bg-light">
+          <form (ngSubmit)="onFileUpload()" #uploadForm="ngForm">
+            <div class="mb-3">
+              <label for="answerFile" class="form-label">Upload your answer in PDF format</label>
+              <input type="file" class="form-control" id="answerFile" accept=".pdf" (change)="onFileSelected($event)"
+                required>
+              <div class="form-text">Maximum file size: 10MB</div>
+            </div>
+
+            <div *ngIf="selectedFile" class="alert alert-info">
+              <i class="fas fa-file-pdf me-2"></i>
+              Selected file: {{ selectedFile.name }}
+            </div>
+
+            <button type="submit" class="btn btn-primary" [disabled]="!selectedFile || isUploading">
+              <i class="fas fa-upload me-2"></i>
+              {{ isUploading ? 'Uploading...' : 'Upload Answer' }}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+<div *ngIf="!isPassed" class="alert alert-warning d-flex align-items-center my-5 shadow-sm" role="alert">
+  <i class="fas fa-exclamation-triangle fa-2x me-3 text-warning"></i>
+  <div>
+    <h4 class="alert-heading mb-1">Final Test Not Available</h4>
+    <p class="mb-0">
+      The final test is not yet uploaded, or you haven't submitted all assignments, or some are still pending review.
+    </p>
+  </div>
+</div>

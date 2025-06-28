@@ -1,0 +1,154 @@
+.cart-container {
+  background: linear-gradient(120deg, #f8fafc 0%, #e9f1fa 100%);
+  min-height: 100vh;
+}
+
+.cart-header {
+  text-align: center;
+}
+
+.cart-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.cart-subtitle {
+  font-size: 1.1rem;
+  color: #7b8a99;
+}
+
+.cart-items {
+  background: #fff;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 16px rgba(44, 62, 80, 0.08);
+  padding: 2rem 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.cart-item {
+  border-bottom: 1px solid #f0f4f8;
+  padding: 1.5rem 0;
+}
+
+.cart-item:last-child {
+  border-bottom: none;
+}
+
+.course-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.08);
+}
+
+.course-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.course-description {
+  color: #666;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.course-meta {
+  font-size: 0.95rem;
+  color: #7b8a99;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.price {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #27ae60;
+}
+
+.order-summary {
+  background: #fff;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 16px rgba(44, 62, 80, 0.08);
+}
+
+.summary-item {
+  font-size: 1rem;
+}
+
+.summary-total {
+  font-size: 1.2rem;
+}
+
+.btn-success {
+  font-weight: 600;
+  border-radius: 0.75rem;
+  font-size: 1.1rem;
+  margin-top: 1rem;
+}
+
+.empty-cart {
+  color: #7b8a99;
+}
+
+.course-schedule {
+  font-size: 1rem;
+  color: #2980b9;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 900px) {
+  .cart-items, .order-summary {
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+  .course-image {
+    width: 70px;
+    height: 70px;
+  }
+}
+
+.success-message {
+  background: white;
+  border-radius: 1rem;
+  padding: 3rem;
+  box-shadow: 0 4px 16px rgba(44, 62, 80, 0.08);
+  max-width: 600px;
+  margin: 0 auto;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.success-icon {
+  font-size: 4rem;
+  color: #28a745;
+}
+
+.success-content h2 {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.order-number {
+  color: #3498db;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 1rem 0;
+}
+
+.redirect-message {
+  color: #7b8a99;
+  font-size: 0.9rem;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

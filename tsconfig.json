@@ -23,5 +23,11 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
-  }
+  },
+  "exclude": [
+    "src/main.server.ts",
+    "src/server.ts",
+    "src/main.server.ngtypecheck.ts",
+    "src/server.ngtypecheck.ts"
+  ]
 }

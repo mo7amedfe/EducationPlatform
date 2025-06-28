@@ -1,0 +1,34 @@
+.Landing{
+    width: 100%;
+    height: 100vh;
+    margin-top: -10%;
+    background-image: url('../../../assets/images/header.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.layer{
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+h1{
+    font-size: 60px;
+}
+.btncontainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+button{
+    width: 106px;
+}
+
+.About{
+    min-height: 80vh;
+}
+.About iframe{
+    width: 100%;
+    min-height: 70vh;
+}

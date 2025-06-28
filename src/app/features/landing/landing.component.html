@@ -1,0 +1,69 @@
+<div class="Landing">
+  <div class="layer d-flex justify-content-center align-items-center">
+    <div class="col-md-4 text-center">
+      <h1 class="text-white fw-bold ">Code your World</h1>
+      <div class="btncontainer mt-5">
+        <button (click)="login()" class="btn btn-outline-success px-4 py-2">Login</button>
+        <button (click)="register()" class="btn btn-dark px-4 py-2">Register</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="About container">
+  <div class="row">
+    <div class="w-100 d-flex justify-content-center align-items-center flex-wrap p-4">
+      <h3 class="text-center w-100 my-3">About</h3>
+
+      <div class="col-md-10 d-flex justify-content-center align-items-center shadow-lg p-3 rounded-5 bg-light">
+        <video src="assets/videos/ngg.mp4" class="mx-auto rounded-5 w-100" controls preload="metadata">
+          Your browser does not support the video tag.
+        </video>
+
+      </div>
+    </div>
+
+  </div>
+  <div class="container mt-lg-4">
+    <app-courses></app-courses>
+  </div>
+
+  <section class="container my-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-12">
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <h2 class="text-center mb-3">Contact Us</h2>
+            <p class="text-center text-muted mb-4">
+              We'd love to hear from you. Please fill out the form below.
+            </p>
+
+            <form (ngSubmit)="onSubmit()" #contactForm="ngForm" novalidate>
+              <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" name="name" [(ngModel)]="formData.name" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="email" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="email" name="email" [(ngModel)]="formData.email"
+                  required />
+              </div>
+
+              <div class="mb-3">
+                <label for="message" class="form-label">Message</label>
+                <textarea class="form-control" id="message" name="message" rows="5" [(ngModel)]="formData.message"
+                  required></textarea>
+              </div>
+
+              <div class="d-grid w-100 justify-content-center">
+                <button type="submit" style="width: 150px;" class="btn btn-outline-dark py-2 px-2">
+                  Send Message
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
