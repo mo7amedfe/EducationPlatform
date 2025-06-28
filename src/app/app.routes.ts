@@ -1,125 +1,85 @@
-import { AdminComponent } from './features/admin/admin/admin.component';
+import { instructorGuard } from './core/guards/instructor.guard';
+import { adminGuard } from './core/guards/admin.guard';
+import { authGuard } from './core/guards/auth.guard';
 import { Routes } from '@angular/router';
+import { LandingComponent } from './features/landing/landing.component';
+import { LoginComponent } from './features/auth/login/login.component';
+import { RegisterComponent } from './features/auth/register/register.component';
+import { HomeComponent } from './features/home/home.component';
+import { CartComponent } from './features/cart/cart.component';
+import { AdminComponent } from './features/admin/admin-dashboard/admin-dashboard.component';
+import { SubscribedCoursesComponent } from './features/subscribed-courses/subscribed-courses.component';
+import { EnrolledCourseDataComponent } from './features/enrolled-course-data/enrolled-course-data.component';
+import { CourseFinalTestComponent } from './features/enrolled-course-data/course-final-test/course-final-test.component';
+import { StudentsAssignmentsComponent } from './features/review/students-assignments/students-assignments.component';
+import { ProfileComponent } from './features/profile/profile.component';
+import { PlacementTestComponent } from './features/placement-test/placement-test.component';
+import { CourseDetailesComponent } from './features/course-detailes/course-detailes.component';
+import { AdminCoursesComponent } from './features/admin/admin-courses/admin-courses.component';
+import { InstructorDashboardComponent } from './features/instructor/instructor-dashboard/instructor-dashboard.component';
 
 export const routes: Routes = [
-  // Landing Page (before login)
+
   {
-    path: '',
-    loadComponent: () =>
-      import('./features/landing/landing.component').then(
-        (m) => m.LandingComponent
-      ),
+    path: '',component:LandingComponent
   },
 
-  // Auth
+
   {
-    path: 'login',
-    loadComponent: () =>
-      import('./features/auth/login/login.component').then(
-        (m) => m.LoginComponent
-      ),
+    path: 'login',component:LoginComponent
   },
   {
-    path: 'register',
-    loadComponent: () =>
-      import('./features/auth/register/register.component').then(
-        (m) => m.RegisterComponent
-      ),
+    path: 'register',component:RegisterComponent
   },
 
-  // Home (after login)
   {
-    path: 'home',
-    loadComponent: () =>
-      import('./features/home/home.component').then((m) => m.HomeComponent),
+    path: 'home',component:HomeComponent,canActivate:[authGuard]
   },
 
-  // Cart
     {
-      path: 'Cart',
-      loadComponent: () =>
-        import('./features/cart/cart.component').then((m) => m.CartComponent),
+      path: 'Cart',component:CartComponent,canActivate:[authGuard]
     },
 
-  //   Admin Page (contains inner components)
+
   {
-    path: 'admin',
-    loadComponent: () =>
-      import('./features/admin/admin/admin.component').then(
-        (m) => m.AdminComponent
-      ),
+    path: 'subscribed-courses',component:SubscribedCoursesComponent,canActivate:[authGuard]
+  },
+  {
+    path: 'subscribed-courses/:id',component:EnrolledCourseDataComponent,canActivate:[authGuard]
+  },
+  {
+    path: 'courseFinalTest/:id',component:CourseFinalTestComponent,canActivate:[authGuard]
   },
 
-  // Subscribed Courses
   {
-    path: 'subscribed-courses',
-    loadComponent: () =>
-      import('./features/subscribed-courses/subscribed-courses.component').then(
-        (m) => m.SubscribedCoursesComponent
-      ),
-  },
-  {
-    path: 'subscribed-courses/:id',
-    loadComponent: () =>
-      import(
-        './features/enrolled-course-data/enrolled-course-data.component'
-      ).then((m) => m.EnrolledCourseDataComponent),
-  },
-  {
-    path: 'courseFinalTest/:id',
-    loadComponent: () =>
-      import(
-        './features/enrolled-course-data/course-final-test/course-final-test.component'
-      ).then((m) => m.CourseFinalTestComponent),
-  },
-
-  // Review (for instructors)
-  {
-    path: 'studentsAssignments',
-    loadComponent: () =>
-      import(
-        './features/review/students-assignments/students-assignments.component'
-      ).then((m) => m.StudentsAssignmentsComponent),
-  },
-
-  // Profile
-  {
-    path: 'profile',
-    loadComponent: () =>
-      import('./features/profile/profile.component').then(
-        (m) => m.ProfileComponent
-      ),
+    path: 'profile',component:ProfileComponent,canActivate:[authGuard]
+    
   },
     {
-      path: 'PlacementTest',
-      loadComponent: () =>
-        import('./features/placement-test/placement-test.component').then((m) => m.PlacementTestComponent),
+      path: 'PlacementTest',component:PlacementTestComponent,canActivate:[authGuard]
     },
   {
-    path: 'courses/:id',
-    loadComponent: () =>
-      import('./features/course-detailes/course-detailes.component').then(
-        (m) => m.CourseDetailesComponent
-      ),
+    path: 'courses/:id',component:CourseDetailesComponent
   },
   {
-    path: 'courses',
-    loadComponent: () =>
-      import('./features/admin/admin-courses/admin-courses.component').then(
-        (m) => m.AdminCoursesComponent
-      ),
+    path: 'admin',component:AdminComponent,canActivate:[authGuard,adminGuard]
   },
-  //   {
-  //     path: 'profile/final-feedback',
-  //     loadComponent: () =>
-  //       import('./features/profile/final-feedback/final-feedback.component').then((m) => m.FinalFeedbackComponent),
-  //   },
 
-  // Fallback route (404)
+  {
+    path: 'studentsAssignments',component:StudentsAssignmentsComponent,canActivate:[authGuard,instructorGuard]
+  },
+  
+  {
+    path: 'courses',component:AdminCoursesComponent,canActivate:[authGuard,instructorGuard]
+  },
+
+  {
+    path: 'instructorDashboard',component:InstructorDashboardComponent,canActivate:[authGuard,instructorGuard]
+  },
+
+
   {
     path: '**',
-    redirectTo: '',
+    redirectTo: 'home',
   },
 ];
-
-// 🛠️ لو بتستخدم bootstrapApplication

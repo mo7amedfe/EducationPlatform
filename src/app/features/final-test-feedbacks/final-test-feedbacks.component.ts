@@ -1,7 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { UserService } from './../../core/services/user.service';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { Token } from '@angular/compiler';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -12,11 +11,12 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './final-test-feedbacks.component.css'
 })
 export class FinalTestFeedbacksComponent implements OnInit {
- constructor(private _HttpClient:HttpClient) { }
+
+  private _UserService=inject(UserService)
   ngOnInit(): void {
-   const Token= localStorage.getItem('token') || '';
-    const headers = { 'Authorization': `Bearer ${Token}` };
-this._HttpClient.get('http://localhost:3000/finalTest/feedback', { headers }).subscribe({
+
+
+this._UserService.getFinalTestsFeedbacks().subscribe({
   next: (res: any) => {
     console.log(res);
     this.assignmentFeedbacks = res.submissions || [];

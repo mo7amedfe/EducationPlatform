@@ -11,6 +11,9 @@ export class AuthService {
   isAdmin = new BehaviorSubject<boolean>(false);
   isAdmin$ = this.isAdmin.asObservable();
 
+  isInstructor = new BehaviorSubject<boolean>(false);
+  isInstructor$ = this.isInstructor.asObservable();
+
   isLogin = new BehaviorSubject<boolean>(false);
   isLogin$ = this.isLogin.asObservable();
 
@@ -33,16 +36,18 @@ export class AuthService {
         const decodedToken = this.getDecodedToken();
         if (decodedToken && decodedToken.role === 'Admin') {
           this.setIsAdmin(true);
-          console.log(this.isAdmin.getValue());
+          this.setIsInstructor(false);
+        } else if (decodedToken && decodedToken.role === 'Instructor') {
+          this.setIsAdmin(false);
+          this.setIsInstructor(true);
         } else {
           this.setIsAdmin(false);
-          console.log(this.isAdmin.getValue());
-
+          this.setIsInstructor(false);
         }
       } else {
         this.setIsAdmin(false);
+        this.setIsInstructor(false);
           console.log(this.isAdmin.getValue());
-
       }
     } else {
       this.setIsLogin(false);
@@ -51,9 +56,16 @@ export class AuthService {
 
   setIsLogin(state: boolean) {
     this.isLogin.next(state);
+    if (!state) {
+      this.setIsAdmin(state)
+      this.setIsInstructor(state)
+    }
   }
   setIsAdmin(state: boolean) {
     this.isAdmin.next(state);
+  }
+  setIsInstructor(state: boolean) {
+    this.isInstructor.next(state);
   }
 
   getToken(): string {

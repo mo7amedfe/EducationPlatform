@@ -21,38 +21,27 @@ export class CartService {
 
   // Add item to cart
   addToCart(schedule: any, courseId: any) {
-    const token = this._AuthService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this._HttpClient.post(
       'http://localhost:3000/cart/addToCart',
       { schedule, courseId },
-      { headers }
     );
   }
   getCart():Observable<any> {
-    const token = this._AuthService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this._HttpClient.get('http://localhost:3000/cart/getCart', {headers});
+    return this._HttpClient.get('http://localhost:3000/cart/getCart');
   }
   deleteCourse(courseId:any):Observable<any> {
-    const token = this._AuthService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     const body = {courseId:courseId};
-    return this._HttpClient.delete("http://localhost:3000/cart/course",{body,headers});
+    return this._HttpClient.delete("http://localhost:3000/cart/course",{body});
   }
   clearCart():Observable<any> {
-    const token = this._AuthService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this._HttpClient.delete("http://localhost:3000/cart/clear",{headers});
+    return this._HttpClient.delete("http://localhost:3000/cart/clear");
   }
 
   checkout(cartId:any,paymentMethod:any):Observable<any> {
-    const token = this._AuthService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     const body = {
       "cartId": cartId,
       "paymentMethod": paymentMethod,
     };
-    return this._HttpClient.post("http://localhost:3000/order",body,{headers});
+    return this._HttpClient.post("http://localhost:3000/order",body);
   }
 }

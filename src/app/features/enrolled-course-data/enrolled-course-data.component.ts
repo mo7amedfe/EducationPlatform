@@ -1,6 +1,4 @@
 import { CourseDataService } from './../../core/services/course-data.service';
-import { AuthService } from './../../core/services/auth.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -30,9 +28,7 @@ export class EnrolledCourseDataComponent implements OnInit {
 
   constructor(
     private _ActivatedRoute: ActivatedRoute,
-    private _CourseDataService: CourseDataService,
-    private _AuthService: AuthService,
-    private _HttpClient: HttpClient
+    private _CourseDataService: CourseDataService
   ) {}
 
   ngOnInit(): void {
@@ -40,7 +36,7 @@ export class EnrolledCourseDataComponent implements OnInit {
     this._CourseDataService.getCourseData(this.courseId).subscribe({
       next: (res: any) => {
         console.log(res);
-        
+
         this.courseData = res;
         if (this.courseData.courselessons.length > 0) {
           this.selectedLesson = this.courseData.courselessons[0];
@@ -56,8 +52,8 @@ export class EnrolledCourseDataComponent implements OnInit {
 
   selectLesson(lesson: any) {
     this.selectedLesson = lesson;
-    this.selectedFile = null; 
-    this.uploadMessage = ''; 
+    this.selectedFile = null;
+    this.uploadMessage = '';
     if (this.fileInput) {
       this.fileInput.nativeElement.value = '';
     }
@@ -78,27 +74,18 @@ export class EnrolledCourseDataComponent implements OnInit {
     formData.append('file', this.selectedFile);
 
     // Example: get token from AuthService or localStorage
-    const token =
-      this._AuthService.getToken?.() || localStorage.getItem('token') || '';
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
 
     this.uploadMessage = 'Uploading...';
 
-    this._HttpClient
-      .post(
-        `http://localhost:3000/submittedAssignment/${this.selectedLesson._id}/submissions`,
-        formData,
-        { headers }
-      )
+    let selectedLessonId = this.selectedLesson._id;
+
+    this._CourseDataService
+      .uploadAssignment(selectedLessonId, formData)
       .subscribe({
         next: (res: any) => {
           this.uploadMessage = 'Assignment uploaded successfully!';
           this.selectedFile = null;
-    
-    
+
           this.selectedLesson.submissions.push(res.submission);
         },
         error: (err) => {
@@ -120,9 +107,9 @@ export class EnrolledCourseDataComponent implements OnInit {
     this._CourseDataService
       .getLessonAssignment(this.selectedLesson._id)
       .subscribe((blob: Blob) => {
-        const contentDisposition = 'attachment; filename=assignment.pdf'; 
+        const contentDisposition = 'attachment; filename=assignment.pdf';
 
-        const fileName = 'assignment.pdf'; 
+        const fileName = 'assignment.pdf';
 
         const link = document.createElement('a');
         link.href = window.URL.createObjectURL(blob);
@@ -134,33 +121,22 @@ export class EnrolledCourseDataComponent implements OnInit {
   downloadSubmission(submission_id: string) {
     if (!this.selectedLesson) return;
     // Example: get token from AuthService or localStorage
-    const token =
-      this._AuthService.getToken?.() || localStorage.getItem('token') || '';
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
+    this._CourseDataService.dowmloadSubmission(submission_id).subscribe({
+      next: (response: Blob) => {
+        const blob = new Blob([response]);
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `submission_${submission_id}.pdf`; // You can adjust the filename/extension as needed
+        a.click();
+
+        URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error('Error downloading submission:', err);
+        alert('Failed to download submission. Please try again later.');
+      },
     });
-
-    this._HttpClient
-      .get(
-        `http://localhost:3000/submittedAssignment/my-submissions/${submission_id}/download`,
-        { headers, responseType: 'blob' }
-      )
-      .subscribe({
-        next: (response: Blob) => {
-          const blob = new Blob([response]);
-          const url = URL.createObjectURL(blob);
-
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `submission_${submission_id}.pdf`; // You can adjust the filename/extension as needed
-          a.click();
-
-          URL.revokeObjectURL(url);
-        },
-        error: (err) => {
-          console.error('Error downloading submission:', err);
-          alert('Failed to download submission. Please try again later.');
-        },
-      });
   }
 }

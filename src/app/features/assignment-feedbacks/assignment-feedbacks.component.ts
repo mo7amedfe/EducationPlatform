@@ -1,6 +1,7 @@
+import { UserService } from './../../core/services/user.service';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -13,13 +14,10 @@ export class AssignmentFeedbacksComponent implements OnInit {
   feedbacks: any[] = [];
   selectedCourse: string = '';
 
-  constructor(private _HttpClient: HttpClient) { }
-
+private _UserService=inject(UserService)
   ngOnInit(): void {
-    const token = localStorage.getItem('token') || '';
-    const headers = { 'Authorization': `Bearer ${token}` };
-    this._HttpClient.get('http://localhost:3000/submittedAssignment/submissions', { headers })
-      .subscribe({
+
+    this._UserService.getAssignmentsFeedbacks().subscribe({
         next: (res: any) => {
           this.feedbacks = Array.isArray(res.submissions) ? res.submissions : [];
         }

@@ -1,8 +1,7 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { CoursesService } from './../../core/services/courses.service';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterModule } from '@angular/router';
-import { Observable } from 'rxjs';
+import { RouterLink } from '@angular/router';
 import { CardComponent } from '../../shared/components/card/card.component';
 
 @Component({
@@ -12,15 +11,17 @@ import { CardComponent } from '../../shared/components/card/card.component';
   styleUrl: './courses.component.css'
 })
 export class CoursesComponent implements OnInit {
-  constructor(private _HttpClient: HttpClient) { }
+
+  private _CoursesService=inject(CoursesService)
+
   courses: any = []
   isLoading:boolean = true;
 
+
   ngOnInit(): void {
     this.isLoading = true;
-    this.getCoarses().subscribe({
+    this._CoursesService.getAllcourses().subscribe({
       next: (res) => {
-        // console.log(res);
         this.courses = res
         this.isLoading = false;
       },
@@ -28,9 +29,5 @@ export class CoursesComponent implements OnInit {
         this.isLoading = false;
       }
     })
-  }
-
-  getCoarses(): Observable<any> {
-    return this._HttpClient.get("http://localhost:3000/course/")
   }
 }

@@ -1,7 +1,7 @@
-import { AuthService } from './../../../../core/services/auth.service';
+import { AdminService } from './../../../services/admin.service';
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { CoursesService } from '../../../../../core/services/courses.service';
 
 @Component({
   selector: 'app-delete-course',
@@ -9,15 +9,12 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './delete-course.component.html',
   styleUrl: './delete-course.component.css',
 })
-export class DeleteCourseComponent implements OnInit {
-  constructor(
-    private _HttpClient: HttpClient,
-    private _AuthService: AuthService
-  ) {}
-  ngOnInit(): void {
-    this.Token = this._AuthService.getToken();
-  }
-  Token: any;
+export class DeleteCourseComponent {
+
+private _AdminService=inject(AdminService)
+private _CoursesService=inject(CoursesService)
+
+
   isCourseListLoading: boolean = false;
   notificationMessage: string = '';
   IsNotificationVisible: boolean = false;
@@ -32,7 +29,7 @@ export class DeleteCourseComponent implements OnInit {
   getAllcourses() {
     this.isListShown = !this.isListShown;
     this.isCourseListLoading = true;
-    return this._HttpClient.get('http://localhost:3000/course/').subscribe({
+    this._CoursesService.getAllcourses().subscribe({
       next: (res) => {
         this.isNotificationSuccess = true;
         this.notificationMessage = 'Courses Loaded successfully!';
@@ -60,21 +57,15 @@ export class DeleteCourseComponent implements OnInit {
     this.selectedDeleteCourseId = Course._id;
     this.selectedDeleteCourse = Course.title;
   }
+
+
   deleteCourse() {
     if (!this.selectedDeleteCourseId) return;
     this.isDeletingCourse = true;
-    const headers = new HttpHeaders().set(
-      'Authorization',
-      `Bearer ${this.Token}`
-    );
-    this._HttpClient
-      .delete(`http://localhost:3000/course/${this.selectedDeleteCourseId}`, {
-        headers,
-      })
-      .subscribe({
+ 
+    this._AdminService.deleteCourse(this.selectedDeleteCourseId).subscribe({
         next: () => {
           this.isDeletingCourse = false;
-
           this.isNotificationSuccess = true;
           this.notificationMessage = 'Course deleted successfully!';
           this.IsNotificationVisible = true;

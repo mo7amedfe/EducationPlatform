@@ -56,9 +56,9 @@
 </div>
 <div class="container mt-5">
   <div class="row ">
-    <app-subscribed-courses *ngIf="!isAdmin"></app-subscribed-courses>
-    <app-assignment-feedbacks *ngIf="!isAdmin"></app-assignment-feedbacks>
-    <app-final-test-feedbacks *ngIf="!isAdmin"></app-final-test-feedbacks>
+    <app-subscribed-courses *ngIf="!isAdmin && !isInstructor"></app-subscribed-courses>
+    <app-assignment-feedbacks *ngIf="!isAdmin&& !isInstructor"></app-assignment-feedbacks>
+    <app-final-test-feedbacks *ngIf="!isAdmin&& !isInstructor"></app-final-test-feedbacks>
   </div>
 </div>
 

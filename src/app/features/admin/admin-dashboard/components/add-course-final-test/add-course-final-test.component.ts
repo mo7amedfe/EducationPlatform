@@ -1,7 +1,7 @@
-import { AuthService } from './../../../../core/services/auth.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { CoursesService } from './../../../../../core/services/courses.service';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { AdminService } from '../../../services/admin.service';
 
 @Component({
   selector: 'app-add-course-final-test',
@@ -9,15 +9,11 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './add-course-final-test.component.html',
   styleUrl: './add-course-final-test.component.css',
 })
-export class AddCourseFinalTestComponent implements OnInit {
-  constructor(
-    private _HttpClient: HttpClient,
-    private _AuthService: AuthService
-  ) {}
-  ngOnInit(): void {
-    this.Token = this._AuthService.getToken();
-  }
-  Token: any;
+export class AddCourseFinalTestComponent {
+  private _CoursesService=inject(CoursesService) 
+  private _AdminService=inject(AdminService) 
+
+
   isCourseListLoading: boolean = false;
   notificationMessage: string = '';
   IsNotificationVisible: boolean = false;
@@ -32,7 +28,7 @@ export class AddCourseFinalTestComponent implements OnInit {
   getAllcourses() {
     this.isListShown = !this.isListShown;
     this.isCourseListLoading = true;
-    return this._HttpClient.get('http://localhost:3000/course/').subscribe({
+    this._CoursesService.getAllcourses().subscribe({
       next: (res) => {
         this.isNotificationSuccess = true;
         this.notificationMessage = 'Courses Loaded successfully!';
@@ -105,21 +101,12 @@ export class AddCourseFinalTestComponent implements OnInit {
       return;
     }
 
-    const headers = new HttpHeaders().set(
-      'Authorization',
-      `Bearer ${this.Token}`
-    );
+
 
     const formData = new FormData();
     formData.append('finalTestFile', this.selectedFinalTestFile);
 
-    this._HttpClient
-      .post(
-        `http://localhost:3000/finalTest/course/${this.selectedCourseForFinalTestId}/create`,
-        formData,
-        { headers }
-      )
-      .subscribe({
+    this._AdminService.addFinalTest(this.selectedCourseForFinalTestId,formData).subscribe({
         next: (res) => {
           this.isLoading=false
           this.isNotificationSuccess = true;

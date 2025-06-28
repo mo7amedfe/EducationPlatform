@@ -1,9 +1,10 @@
 import { AuthService } from './../../../core/services/auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CourseDataService } from '../../../core/services/course-data.service';
 
 @Component({
   selector: 'app-course-final-test',
@@ -22,11 +23,11 @@ export class CourseFinalTestComponent implements OnInit {
   message: any = '';
   isPassed: boolean = false;
 
-  constructor(
-    private _HttpClient: HttpClient,
-    private _ActivatedRoute: ActivatedRoute,
-    private _AuthService: AuthService
-  ) {}
+ 
+    private _ActivatedRoute=inject(ActivatedRoute)
+   
+    private _CourseDataService=inject(CourseDataService)
+ 
 
   ngOnInit(): void {
     this.courseId = this._ActivatedRoute.snapshot.params['id'];
@@ -35,16 +36,9 @@ export class CourseFinalTestComponent implements OnInit {
 
   loadFinalTest() {
     this.isLoadingFinalTest = true;
-    const token =
-      this._AuthService.getToken?.() || localStorage.getItem('token') || '';
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-    this._HttpClient
-      .get(`http://localhost:3000/finalTest/course/${this.courseId}/file`, {
-        headers,
-        responseType: 'blob',
-      })
-      .subscribe({
+
+  this._CourseDataService.downloadCourseFinalTest(this.courseId).subscribe({
         next: (res: Blob) => {
           this.isPassed = true;
           const fileURL = URL.createObjectURL(res);
@@ -61,16 +55,8 @@ export class CourseFinalTestComponent implements OnInit {
       });
   }
   DownloadFinalTest() {
-    const token =
-      this._AuthService.getToken?.() || localStorage.getItem('token') || '';
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-    this._HttpClient
-      .get(`http://localhost:3000/finalTest/course/${this.courseId}/file`, {
-        headers,
-        responseType: 'blob',
-      })
-      .subscribe({
+    this._CourseDataService.downloadCourseFinalTest(this.courseId).subscribe({
         next: (res: Blob) => {
           const blob = new Blob([res], { type: res.type });
           const url = window.URL.createObjectURL(blob);
@@ -101,16 +87,7 @@ export class CourseFinalTestComponent implements OnInit {
     const formData = new FormData();
     formData.append('finalTestFile', this.selectedFile);
 
-    const token =this._AuthService.getToken?.() || localStorage.getItem('token') || '';
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
-    this._HttpClient
-      .post(
-        `http://localhost:3000/finalTest/course/${this.courseId}/submit`,
-        formData,
-        { headers }
-      )
-      .subscribe({
+    this._CourseDataService.uploadFinalTest(this.courseId,formData).subscribe({
         next: () => {
           this.showNotification('Answer submitted successfully!');
           this.selectedFile = null;

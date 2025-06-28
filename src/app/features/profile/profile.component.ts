@@ -1,20 +1,24 @@
-import { NavbarComponent } from './../../core/layout/navbar/navbar.component';
 import { AuthService } from './../../core/services/auth.service';
 import { UserService } from './../../core/services/user.service';
 import { FinalTestFeedbacksComponent } from './../final-test-feedbacks/final-test-feedbacks.component';
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { SubscribedCoursesComponent } from "../subscribed-courses/subscribed-courses.component";
-import { AssignmentFeedbacksComponent } from "../assignment-feedbacks/assignment-feedbacks.component";
-
+import { SubscribedCoursesComponent } from '../subscribed-courses/subscribed-courses.component';
+import { AssignmentFeedbacksComponent } from '../assignment-feedbacks/assignment-feedbacks.component';
 
 @Component({
   selector: 'app-profile',
-  imports: [FormsModule, CommonModule, SubscribedCoursesComponent, FinalTestFeedbacksComponent, FinalTestFeedbacksComponent, AssignmentFeedbacksComponent],
+  imports: [
+    FormsModule,
+    CommonModule,
+    SubscribedCoursesComponent,
+    FinalTestFeedbacksComponent,
+    FinalTestFeedbacksComponent,
+    AssignmentFeedbacksComponent,
+  ],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css'
+  styleUrl: './profile.component.css',
 })
 export class ProfileComponent implements OnInit {
   user: any = {};
@@ -22,14 +26,21 @@ export class ProfileComponent implements OnInit {
   updatedEmail: string = '';
   updatedScore: Number | undefined;
   message: string = '';
-  isEditing: boolean = false
+  isEditing: boolean = false;
 
-  constructor(private _AuthService: AuthService, private _UserService: UserService) { }
+  private _UserService = inject(UserService);
+  private _AuthService = inject(AuthService);
 
   ngOnInit(): void {
     this._AuthService.isAdmin$.subscribe((state) => {
       if (state) {
-        this.isAdmin = true
+        this.isAdmin = true;
+      } else {
+        this._AuthService.isInstructor$.subscribe((state) => {
+          if (state) {
+            this.isInstructor = true;
+          }
+        });
       }
     });
     const decodedToken = this._AuthService.getDecodedToken();
@@ -42,45 +53,46 @@ export class ProfileComponent implements OnInit {
     }
     this._UserService.$profileImage.subscribe({
       next: (res) => {
-        this.setImagePreview(res)
-      }
-    })
+        this.setImagePreview(res);
+      },
+    });
 
     this._UserService.$score.subscribe((state) => {
-      this.updatedScore = state
-      this.user.score = state
-    })
+      this.updatedScore = state;
+      this.user.score = state;
+    });
   }
-     isAdmin:boolean = false
+  isAdmin: boolean = false;
+  isInstructor: boolean = false;
 
   updateUserData() {
     const body = {
       email: this.updatedEmail,
-      username: this.updatedUsername
+      username: this.updatedUsername,
     };
 
     this._UserService.updateUserData(body).subscribe({
       next: (res) => {
         this.message = res.message;
-        localStorage.setItem("token", res.token)
+        localStorage.setItem('token', res.token);
         this.user.username = this.updatedUsername;
-        this._UserService.setEmail(this.updatedEmail)
-        this._UserService.setname(this.updatedUsername)
+        this._UserService.setEmail(this.updatedEmail);
+        this._UserService.setname(this.updatedUsername);
         this.user.email = this.updatedEmail;
         this.user.score = this.updatedScore;
         console.log(this.user);
-        this.isEditing = false
+        this.isEditing = false;
       },
       error: (err) => {
         this.message = err.error?.message || 'Update failed';
-      }
-    })
+      },
+    });
   }
 
   imagePreview: string | ArrayBuffer | null = null;
 
   setImagePreview(imagePreview: any) {
-    this.imagePreview = imagePreview
+    this.imagePreview = imagePreview;
   }
 
   onFileSelected(event: any): void {
@@ -102,9 +114,11 @@ export class ProfileComponent implements OnInit {
         next: (res) => {
           this._UserService.setProfileImage(res.user.profile_pic.secure_url);
 
-          this._UserService.$profileImage.subscribe((url) => { this.imagePreview = url })
-        }
-      })
+          this._UserService.$profileImage.subscribe((url) => {
+            this.imagePreview = url;
+          });
+        },
+      });
     }
   }
 }

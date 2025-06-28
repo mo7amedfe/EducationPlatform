@@ -1,12 +1,6 @@
-import { AuthService } from './../../../../core/services/auth.service';
+import { AdminService } from './../../../services/admin.service';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-
-import {
-  Observable,
-
-} from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Component, inject } from '@angular/core';
 @Component({
   selector: 'app-all-users',
   imports: [CommonModule],
@@ -14,7 +8,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   styleUrl: './all-users.component.css'
 })
 export class AllUsersComponent {
-  constructor(private _AuthService:AuthService, private _HttpClient:HttpClient){}
+
+  private _AdminService=inject(AdminService)
+  
   allUsers: any[] = [];
   Token: any;
   isUsersLoading = false; // <-- Added loading indicator for users
@@ -24,11 +20,10 @@ export class AllUsersComponent {
 
 
   ngOnInit(): void {
-    this.Token = this._AuthService.getToken();
-
-    this.getAllUsers().subscribe({
+    this.isUsersLoading =true
+    this._AdminService.getAllUsers().subscribe({
       next: (response:any) => {
-        this.allUsers = response.allUsers; // Store users for the table
+        this.allUsers = response.allUsers;
         this.isUsersLoading = false; 
         
       },
@@ -44,24 +39,10 @@ export class AllUsersComponent {
       },
     });
   }
-  getAllUsers(): Observable<any> {
-    this.isUsersLoading =true
-    const headers = new HttpHeaders().set(
-      'Authorization',
-      `Bearer ${this.Token}`
-    );
-    return this._HttpClient.get('http://localhost:3000/user/allUsers', {
-      headers,
-    });
-  }
+ 
   DeleteUser(user: any) {
-    const headers = { Authorization: `Bearer ${this.Token}` };
-    return this._HttpClient
-      .delete('http://localhost:3000/user/deleteUser', {
-        body: { userId: user._id },
-        headers,
-      })
-      .subscribe({
+        let body= { userId: user._id }
+        this._AdminService.DeleteUser(body).subscribe({
         next: (response) => {
           this.notificationMessage = 'User deleted successfully!';
           this.isNotificationSuccess = true;

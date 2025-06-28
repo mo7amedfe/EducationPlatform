@@ -16,29 +16,7 @@ export class NavbarComponent {
   isLogin: boolean = false;
   currentRoute: string = '';
 
-  navs = [
-    { name: 'Home', link: '/home' },
-    {
-      name: 'Placement Test',
-      link: '/PlacementTest',
-    },
-    {
-      name: 'Cart',
-      link: '/Cart',
-    },
-    {
-      name: 'Subscribed Courses',
-      link: '/subscribed-courses',
-    },
-    {
-      name: 'Admin',
-      link: '/admin',
-    },
-    {
-      name: 'Students Assignments',
-      link: '/studentsAssignments',
-    },
-  ];
+  navs: any = [];
 
   constructor(
     private _AuthService: AuthService,
@@ -49,34 +27,14 @@ export class NavbarComponent {
   imagePreview: string | ArrayBuffer | null = null;
 
   ngOnInit(): void {
-    const token = localStorage.getItem('token');
-
     this._AuthService.checkLoginStatus(); // أول حاجة، شوف هو لوج إن ولا لا
 
     this._AuthService.isLogin$.subscribe((state) => {
       this.isLogin = state;
 
       if (state) {
-        this.navs = [
-          {
-            name: 'Home',
-            link: '/home',
-          },
-          {
-            name: 'Placement Test',
-            link: '/PlacementTest',
-          },
-          {
-            name: 'Cart',
-            link: '/Cart',
-          },
-          {
-            name: 'Subscribed Courses',
-            link: '/subscribed-courses',
-          },
-        ];
-        this._AuthService.isAdmin$.subscribe((state) => {
-          if (state) {
+        this._AuthService.isAdmin$.subscribe((adminState) => {
+          if (adminState) {
             this.navs = [
               {
                 name: 'Admin',
@@ -85,16 +43,53 @@ export class NavbarComponent {
               {
                 name: 'Students Assignments',
                 link: '/studentsAssignments',
-              },{
+              },
+              {
                 name: 'Courses',
                 link: '/courses',
-              }
-            ]
-            this._Router.navigate(['admin'])
+              },
+            ];
           } else {
-            this.navs = this.navs.filter((nav) => nav.name !== 'Admin');
+            this._AuthService.isInstructor$.subscribe((instructorState) => {
+              if (instructorState) {
+                this.navs = [
+                  {
+                    name: 'Instructor Dashboard',
+                    link: '/instructorDashboard',
+                  },
+                  {
+                    name: 'Students Assignments',
+                    link: '/studentsAssignments',
+                  },
+                  {
+                    name: 'Courses',
+                    link: '/courses',
+                  },
+                ];
+              } else {
+                this.navs = [
+                  {
+                    name: 'Home',
+                    link: '/home',
+                  },
+                  {
+                    name: 'Placement Test',
+                    link: '/PlacementTest',
+                  },
+                  {
+                    name: 'Cart',
+                    link: '/Cart',
+                  },
+                  {
+                    name: 'Subscribed Courses',
+                    link: '/subscribed-courses',
+                  },
+                ];
+              }
+            });
           }
         });
+
         const decodedToken = this._AuthService.getDecodedToken();
         this.user = decodedToken;
         this._UserService.getProfile().subscribe({
@@ -117,12 +112,7 @@ export class NavbarComponent {
         });
       } else {
         this.user = {};
-        this.navs = [
-          {
-            name: 'Home',
-            link: '/home',
-          },
-        ];
+        this.navs = [];
       }
     });
 
@@ -136,7 +126,14 @@ export class NavbarComponent {
     this._AuthService.setIsLogin(false);
     await localStorage.removeItem('token');
     this._Router.navigate(['/']);
+    this.imagePreview = null;
+    this.navs = [];
   }
+
+  reloadNavbar() {
+    this._AuthService.checkLoginStatus();
+  }
+
   login() {
     this._Router.navigate(['/login']);
   }

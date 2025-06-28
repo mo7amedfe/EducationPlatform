@@ -17,16 +17,4 @@ export class AppComponent {
   
   constructor(private _router: Router) {}
 
-  ngOnInit(): void {
-    if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('token');
-    const currentUrl = this._router.url;
-
-    if (token && currentUrl === '/') {
-      this._router.navigate(['/home']);
-    } else if (!token && currentUrl !== '/') {
-      this._router.navigate(['/']);
-    }
-    }
-  }
 }

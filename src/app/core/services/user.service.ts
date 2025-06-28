@@ -1,6 +1,5 @@
-import { AuthService } from '../../core/services/auth.service';
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { HttpClient} from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 
@@ -8,7 +7,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class UserService {
-  constructor(private _HttpClient: HttpClient, private _AuthService: AuthService) { }
+  
+  private _HttpClient = inject(HttpClient)
 
   private BaseUrl = 'http://localhost:3000';
 
@@ -52,28 +52,23 @@ export class UserService {
   }
   updateUserData(body: any): Observable<any> {
 
-    const token = this._AuthService.getToken();
-
     
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
-
-    
-    return this._HttpClient.patch(`${this.BaseUrl}/user/`, body, { headers })
+    return this._HttpClient.patch(`${this.BaseUrl}/user/`, body)
   }
 
   uploadProfilePic(formData: FormData): Observable<any> {
-    const token = this._AuthService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this._HttpClient.post(`${this.BaseUrl}/user/profile`, formData, { headers });
+
+    return this._HttpClient.post(`${this.BaseUrl}/user/profile`, formData);
   }
   getProfile(): Observable<any> {
-    const token = this._AuthService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this._HttpClient.get(`${this.BaseUrl}/user/`, { headers })
+
+    return this._HttpClient.get(`${this.BaseUrl}/user/`)
   }
-  // getCart():Observable<any>{
-  //   const token = this._AuthService.getToken();
-  //   const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-  //   return this._HttpClient.get(`${this.BaseUrl}/user/cart`, { headers })
-  // }
+
+  getAssignmentsFeedbacks():Observable<any>{
+   return this._HttpClient.get('http://localhost:3000/submittedAssignment/submissions')
+  }
+  getFinalTestsFeedbacks():Observable<any>{
+    return this._HttpClient.get('http://localhost:3000/finalTest/feedback')
+   }
 }
