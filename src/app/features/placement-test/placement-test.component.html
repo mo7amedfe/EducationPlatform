@@ -1,36 +1,31 @@
-<div class="container my-4 p-4 border rounded shadow bg-white w-100 " >
-  <form *ngIf="!isSubmitted">
+<div  *ngIf="!isSubmitted" class="container  p-4 border rounded shadow bg-white w-100 d-flex flex-wrap align-items-center mt-2">
+  <form class="w-100">
     <div *ngFor="let question of questions" class="mb-4">
       <h5><span>{{ question.id }})</span> {{ question.question }}</h5>
 
       <div class="option-wrapper" *ngFor="let option of question.choices">
-        <input
-          type="radio"
-          [value]="option"
-          [(ngModel)]="question.selectedAnswer"
-          [name]="'answer' + question.id"
-          [id]="option + question.id"
-        />
+        <input type="radio" [value]="option" [(ngModel)]="question.selectedAnswer" [name]="'answer' + question.id"
+          [id]="option + question.id" />
         <label [for]="option + question.id">
           {{ option }}
         </label>
       </div>
     </div>
 
-    <button
-      type="button"
-      class="btn btn-primary mt-3"
-      (click)="submitAnswer()"
-      [disabled]="!allAnswered()"
-    >
+    <button type="button" class="btn btn-primary mt-3" (click)="submitAnswer()" [disabled]="!allAnswered()">
       Submit
     </button>
   </form>
+</div>
 
-  <div *ngIf="isSubmitted" class="">
-  <h2 *ngIf="!isSubmittedBefore">Submit Completed , your Score: <span class="text-danger">{{score}}</span></h2>
-  <h2 *ngIf="isSubmittedBefore">You are Submitted this test before .</h2>
+
+
+
+
+<div *ngIf="isSubmitted" class="container p-4 border rounded shadow bg-white w-100 d-flex flex-wrap align-items-center mt-2">
+  <div  class="">
+    <h2 *ngIf="!isSubmittedBefore">Submit Completed , your Score: <span class="text-danger">{{score}}</span></h2>
+    <h2 *ngIf="isSubmittedBefore">You are Submitted this test before .</h2>
 
   </div>
-  
-</div>
+

@@ -1,6 +1,7 @@
 import { instructorGuard } from './core/guards/instructor.guard';
 import { adminGuard } from './core/guards/admin.guard';
 import { authGuard } from './core/guards/auth.guard';
+import { redirectIfLoggedInGuard } from './core/guards/redirect-if-logged-in.guard';
 import { Routes } from '@angular/router';
 import { LandingComponent } from './features/landing/landing.component';
 import { LoginComponent } from './features/auth/login/login.component';
@@ -21,7 +22,7 @@ import { InstructorDashboardComponent } from './features/instructor/instructor-d
 export const routes: Routes = [
 
   {
-    path: '',component:LandingComponent
+    path: '',component:LandingComponent,canActivate:[redirectIfLoggedInGuard]
   },
 
 

@@ -31,6 +31,6 @@ export class AdminCoursesComponent implements OnInit {
   }
 
   getCoarses(): Observable<any> {
-    return this._HttpClient.get('http://localhost:3000/course/');
+    return this._HttpClient.get(`https://education-platform-back-end.vercel.app/course/`);
   }
 }

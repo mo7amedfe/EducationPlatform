@@ -41,7 +41,7 @@ export class NavbarComponent {
                 link: '/admin',
               },
               {
-                name: 'Students Assignments',
+                name: 'Assignments',
                 link: '/studentsAssignments',
               },
               {
@@ -54,11 +54,11 @@ export class NavbarComponent {
               if (instructorState) {
                 this.navs = [
                   {
-                    name: 'Instructor Dashboard',
+                    name: 'Dashboard',
                     link: '/instructorDashboard',
                   },
                   {
-                    name: 'Students Assignments',
+                    name: 'Assignments',
                     link: '/studentsAssignments',
                   },
                   {
@@ -81,7 +81,7 @@ export class NavbarComponent {
                     link: '/Cart',
                   },
                   {
-                    name: 'Subscribed Courses',
+                    name: 'Enrolled Courses',
                     link: '/subscribed-courses',
                   },
                 ];

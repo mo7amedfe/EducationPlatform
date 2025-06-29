@@ -1,4 +1,4 @@
-<div class="container mt-5">
+<div class="container w-100">
   <div class="row">
     <h1>Login now.</h1>
 
@@ -25,6 +25,11 @@
       <!-- Submit Button -->
       <button class="btn btn-info my-3" type="submit" [disabled]="LoginForm.invalid">Submit</button>
     </form>
+
+    <!-- Register Link -->
+    <div class="text-center mt-3">
+      <p>Don't have an account? <a [routerLink]="['/register']" class="text-info">Register here</a></p>
+    </div>
 
     <!-- Backend Error Message -->
     <div *ngIf="errorMessage" class="alert alert-danger mt-2">

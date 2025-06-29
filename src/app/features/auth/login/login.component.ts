@@ -1,6 +1,6 @@
 import { AuthService } from './../../../core/services/auth.service';
 import { UserService } from './../../../core/services/user.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {
   FormControl,
   FormGroup,
@@ -13,7 +13,7 @@ import { NavbarComponent } from '../../../core/layout/navbar/navbar.component';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })

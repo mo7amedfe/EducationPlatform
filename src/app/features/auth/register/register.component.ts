@@ -39,7 +39,7 @@ export class RegisterComponent {
     gender: new FormControl(null, [Validators.required]),
   });
 
-  regiser() {
+  register() {
     if (this.RegisterForm.invalid) return;
 
     this._UserService.Register(this.RegisterForm.value).subscribe({

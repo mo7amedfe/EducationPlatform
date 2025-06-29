@@ -1,8 +1,8 @@
-<div class="container mt-5">
+<div class="container d-flex flex-wrap align-items-center">
   <div class="row">
     <h1>Register now.</h1>
 
-    <form [formGroup]="RegisterForm" (ngSubmit)="regiser()">
+    <form [formGroup]="RegisterForm" (ngSubmit)="register()">
       <label>Name</label>
       <input class="form-control" formControlName="username" type="text" />
       <div *ngIf="RegisterForm.get('username')?.touched && RegisterForm.get('username')?.invalid" class="text-danger">
@@ -47,6 +47,12 @@
       </button>
       
     </form>
+
+    <!-- Login Link -->
+    <div class="text-center mt-3">
+      <p>Have already an account? <a [routerLink]="['/login']" class="text-info">Login here</a></p>
+    </div>
+    
 
     <div *ngIf="isRegisterSuccessful" class="alert alert-success mt-2">
       Register succeeded. <a [routerLink]="['/login']" class="text-info">Click here to login</a>

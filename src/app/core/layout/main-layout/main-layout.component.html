@@ -1,7 +1,7 @@
-<app-navbar></app-navbar>
+<app-navbar #navbar></app-navbar>
 
-<main class="main-content">
-<router-outlet></router-outlet>
-</main>
+<div [style.paddingTop.px]="navbarHeight" class="container-fluid">
+  <router-outlet></router-outlet>
+</div>
 
 <app-footer></app-footer>

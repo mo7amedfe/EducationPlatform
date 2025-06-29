@@ -1,15 +1,16 @@
-.container{
-    margin-top: 10%;
+app-navbar{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: #1c2b33 ;
+    
 }
 
-.app-container {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+.container-fluid{
+min-height: 50vh;
 
-.main-content {
-  flex: 1;
-  margin-top: 10%;
-  min-height: 80vh;
+padding: 0;
+
 }
