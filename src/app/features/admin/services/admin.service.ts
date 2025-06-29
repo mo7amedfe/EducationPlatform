@@ -57,7 +57,7 @@ export class AdminService {
 
   private createLesson(lessonData: any): Observable<string> {
     return this._HttpClient
-      .post<any>('${this.baseUrl}/leason/', lessonData)
+      .post<any>(`${this.baseUrl}/leason/`, lessonData)
       .pipe(
         map((res) => res.leason._id),
         tap((id) => console.log('Lesson created with ID:', id))
