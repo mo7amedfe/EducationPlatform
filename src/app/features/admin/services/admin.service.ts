@@ -77,7 +77,7 @@ export class AdminService {
     const formData = new FormData();
     formData.append('video', videoFile);
 
-    return this._HttpClient.post(`${this.baseUrl}/leason/${lessonId}/uploadVideo`, formData)
+    return this._HttpClient.post(`${this.baseUrl}/leason/${lessonId}/video`, formData)
       .pipe(
         tap((res) => console.log('Video uploaded:', res)),
         catchError((err) => {
