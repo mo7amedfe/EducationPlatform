@@ -8,13 +8,13 @@ import { Observable } from 'rxjs';
 export class CoursesService {
   private _HttpClient = inject(HttpClient);
 
-  baseUrl: string = 'http://localhost:3000';
+  baseUrl: string = 'https://education-platform-back-end.vercel.app';
 
   getAllcourses(): Observable<any> {
     return this._HttpClient.get(`${this.baseUrl}/course/`);
   }
 
   getSubscribedCourses(): Observable<any> {
-    return this._HttpClient.get('http://localhost:3000/order/enrolled-courses');
+    return this._HttpClient.get(`${this.baseUrl}/order/enrolled-courses`);
   }
 }

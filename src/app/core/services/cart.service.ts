@@ -20,21 +20,25 @@ export class CartService {
   }
 
   // Add item to cart
+
+  baseUrl:string="https://education-platform-back-end.vercel.app"
+
+
   addToCart(schedule: any, courseId: any) {
     return this._HttpClient.post(
-      'http://localhost:3000/cart/addToCart',
+      `${this.baseUrl}/cart/addToCart`,
       { schedule, courseId },
     );
   }
   getCart():Observable<any> {
-    return this._HttpClient.get('http://localhost:3000/cart/getCart');
+    return this._HttpClient.get(`${this.baseUrl}/cart/getCart`);
   }
   deleteCourse(courseId:any):Observable<any> {
     const body = {courseId:courseId};
-    return this._HttpClient.delete("http://localhost:3000/cart/course",{body});
+    return this._HttpClient.delete(`${this.baseUrl}/cart/course`,{body});
   }
   clearCart():Observable<any> {
-    return this._HttpClient.delete("http://localhost:3000/cart/clear");
+    return this._HttpClient.delete(`${this.baseUrl}/cart/clear`);
   }
 
   checkout(cartId:any,paymentMethod:any):Observable<any> {
@@ -42,6 +46,6 @@ export class CartService {
       "cartId": cartId,
       "paymentMethod": paymentMethod,
     };
-    return this._HttpClient.post("http://localhost:3000/order",body);
+    return this._HttpClient.post(`${this.baseUrl}/order`,body);
   }
 }

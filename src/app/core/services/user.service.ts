@@ -10,7 +10,7 @@ export class UserService {
   
   private _HttpClient = inject(HttpClient)
 
-  private BaseUrl = 'http://localhost:3000';
+  private BaseUrl = 'https://education-platform-back-end.vercel.app';
 
   profileImage = new BehaviorSubject<any>(null)
   $profileImage = this.profileImage.asObservable()
@@ -66,9 +66,9 @@ export class UserService {
   }
 
   getAssignmentsFeedbacks():Observable<any>{
-   return this._HttpClient.get('http://localhost:3000/submittedAssignment/submissions')
+   return this._HttpClient.get(`${this.BaseUrl}/submittedAssignment/submissions`)
   }
   getFinalTestsFeedbacks():Observable<any>{
-    return this._HttpClient.get('http://localhost:3000/finalTest/feedback')
+    return this._HttpClient.get(`${this.BaseUrl}/finalTest/feedback`)
    }
 }
