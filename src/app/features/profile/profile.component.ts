@@ -1,19 +1,17 @@
 import { AuthService } from './../../core/services/auth.service';
 import { UserService } from './../../core/services/user.service';
 import { FinalTestFeedbacksComponent } from './../final-test-feedbacks/final-test-feedbacks.component';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SubscribedCoursesComponent } from '../subscribed-courses/subscribed-courses.component';
 import { AssignmentFeedbacksComponent } from '../assignment-feedbacks/assignment-feedbacks.component';
-
 @Component({
   selector: 'app-profile',
   imports: [
     FormsModule,
     CommonModule,
     SubscribedCoursesComponent,
-    FinalTestFeedbacksComponent,
     FinalTestFeedbacksComponent,
     AssignmentFeedbacksComponent,
   ],
@@ -24,46 +22,35 @@ export class ProfileComponent implements OnInit {
   user: any = {};
   updatedUsername: string = '';
   updatedEmail: string = '';
-  updatedScore: Number | undefined;
+  updatedScore?: number;
   message: string = '';
   isEditing: boolean = false;
+  isAdmin: boolean = false;
+  isInstructor: boolean = false;
+  imagePreview: string | ArrayBuffer | null = null;
 
-  private _UserService = inject(UserService);
-  private _AuthService = inject(AuthService);
+  constructor(private _UserService: UserService, private _AuthService: AuthService) {
+    effect(() => {
+      const role = this._AuthService.role();
+      this.isAdmin = role === 'Admin';
+      this.isInstructor = role === 'Instructor';
+      this.imagePreview = this._UserService.profileImage();
+    });
+  }
 
   ngOnInit(): void {
-    this._AuthService.isAdmin$.subscribe((state) => {
-      if (state) {
-        this.isAdmin = true;
-      } else {
-        this._AuthService.isInstructor$.subscribe((state) => {
-          if (state) {
-            this.isInstructor = true;
-          }
-        });
-      }
-    });
     const decodedToken = this._AuthService.getDecodedToken();
     if (decodedToken) {
       this.user = decodedToken;
-      this.updatedUsername = this.user.username;
-      this.updatedEmail = this.user.email;
+      this.updatedUsername = this.user.username || '';
+      this.updatedEmail = this.user.email || '';
     } else {
       this.user = { username: '', email: '' };
     }
-    this._UserService.$profileImage.subscribe({
-      next: (res) => {
-        this.setImagePreview(res);
-      },
-    });
 
-    this._UserService.$score.subscribe((state) => {
-      this.updatedScore = state;
-      this.user.score = state;
-    });
+    this.updatedScore = this._UserService.score();
+    this.user.score = this.updatedScore;
   }
-  isAdmin: boolean = false;
-  isInstructor: boolean = false;
 
   updateUserData() {
     const body = {
@@ -76,11 +63,11 @@ export class ProfileComponent implements OnInit {
         this.message = res.message;
         localStorage.setItem('token', res.token);
         this.user.username = this.updatedUsername;
-        this._UserService.setEmail(this.updatedEmail);
-        this._UserService.setname(this.updatedUsername);
         this.user.email = this.updatedEmail;
         this.user.score = this.updatedScore;
-        console.log(this.user);
+
+        this._UserService.setEmail(this.updatedEmail);
+        this._UserService.setName(this.updatedUsername);
         this.isEditing = false;
       },
       error: (err) => {
@@ -88,8 +75,6 @@ export class ProfileComponent implements OnInit {
       },
     });
   }
-
-  imagePreview: string | ArrayBuffer | null = null;
 
   setImagePreview(imagePreview: any) {
     this.imagePreview = imagePreview;
@@ -101,22 +86,17 @@ export class ProfileComponent implements OnInit {
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
-        this.imagePreview = reader.result; // ده هيعرض الصورة المختارة بدل القديمة
+        this.imagePreview = reader.result;
       };
       reader.readAsDataURL(file);
 
-      // لو عايز ترفع الصورة لسيرفر: send it with FormData
       const formData = new FormData();
       formData.append('profile', file);
-      console.log(formData);
 
       this._UserService.uploadProfilePic(formData).subscribe({
         next: (res) => {
           this._UserService.setProfileImage(res.user.profile_pic.secure_url);
-
-          this._UserService.$profileImage.subscribe((url) => {
-            this.imagePreview = url;
-          });
+          this.imagePreview = this._UserService.profileImage();
         },
       });
     }

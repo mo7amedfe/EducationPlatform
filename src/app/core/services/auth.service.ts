@@ -1,21 +1,24 @@
-import { Injectable } from '@angular/core';
-import {jwtDecode} from 'jwt-decode';
-import { BehaviorSubject } from 'rxjs';
+import { UserService } from './user.service';
+import { inject, Injectable, signal } from '@angular/core';
+import { jwtDecode } from 'jwt-decode';
 import { DecodedToken } from './decoded-token';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
 
-  isAdmin = new BehaviorSubject<boolean>(false);
-  isAdmin$ = this.isAdmin.asObservable();
+  private _UserService=inject(UserService)
 
-  isInstructor = new BehaviorSubject<boolean>(false);
-  isInstructor$ = this.isInstructor.asObservable();
+  isLogin = signal<boolean>(false);
+  setIsLogin(state: boolean) {
+    this.isLogin.set(state);
+  }
 
-  isLogin = new BehaviorSubject<boolean>(false);
-  isLogin$ = this.isLogin.asObservable();
+  role = signal<string | null>(null);
+  setRole(newRole: string | null) {
+    this.role.set(newRole);
+  }
 
   getDecodedToken(): DecodedToken | null {
     if (typeof window !== 'undefined') {
@@ -28,44 +31,24 @@ export class AuthService {
   }
 
   checkLoginStatus() {
-    if (typeof window !== 'undefined') {
+ 
       const token = this.getToken();
       const isLoggedIn = !!token;
       this.setIsLogin(isLoggedIn);
       if (isLoggedIn) {
         const decodedToken = this.getDecodedToken();
+        this._UserService.name.set(decodedToken?.username)
         if (decodedToken && decodedToken.role === 'Admin') {
-          this.setIsAdmin(true);
-          this.setIsInstructor(false);
+          this.setRole('Admin');
         } else if (decodedToken && decodedToken.role === 'Instructor') {
-          this.setIsAdmin(false);
-          this.setIsInstructor(true);
+          this.setRole('Instructor');
         } else {
-          this.setIsAdmin(false);
-          this.setIsInstructor(false);
+          this.setRole('Student');
         }
       } else {
-        this.setIsAdmin(false);
-        this.setIsInstructor(false);
-          console.log(this.isAdmin.getValue());
+        this.setRole(null);
       }
-    } else {
-      this.setIsLogin(false);
-    }
-  }
-
-  setIsLogin(state: boolean) {
-    this.isLogin.next(state);
-    if (!state) {
-      this.setIsAdmin(state)
-      this.setIsInstructor(state)
-    }
-  }
-  setIsAdmin(state: boolean) {
-    this.isAdmin.next(state);
-  }
-  setIsInstructor(state: boolean) {
-    this.isInstructor.next(state);
+ 
   }
 
   getToken(): string {
@@ -74,5 +57,4 @@ export class AuthService {
     }
     return '';
   }
-
 }

@@ -7,13 +7,9 @@ export const redirectIfLoggedInGuard: CanActivateFn = (route, state) => {
   const _AuthService = inject(AuthService);
   const _Router = inject(Router);
 
-  return _AuthService.isLogin$.pipe(
-    map((isLoggedIn) => {
-      if (isLoggedIn) {
-        _Router.navigate(['/home']);
-        return false;
-      }
-      return true;
-    })
-  );
-}; 
+  if (_AuthService.isLogin()) {
+    _Router.navigate(['/home']);
+    return false;
+  }
+  return true
+};

@@ -7,9 +7,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NavbarComponent } from '../../../core/layout/navbar/navbar.component';
 
 @Component({
   selector: 'app-login',
@@ -18,14 +17,7 @@ import { NavbarComponent } from '../../../core/layout/navbar/navbar.component';
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
-  @ViewChild(NavbarComponent) navbar!: NavbarComponent;
   errorMessage: string | null = null;
-
-  constructor(
-    private _UserService: UserService,
-    private _Router: Router,
-    private _AuthService: AuthService
-  ) {}
 
   LoginForm = new FormGroup({
     email: new FormControl(null, [Validators.required, Validators.email]),
@@ -38,33 +30,35 @@ export class LoginComponent {
     ]),
   });
 
+  constructor(
+    private _UserService: UserService,
+    private _Router: Router,
+    private _AuthService: AuthService
+  ) {}
+
   login() {
     this.errorMessage = null;
     this._UserService.Login(this.LoginForm.value).subscribe({
       next: (res) => {
+        console.log(res);
+        
         const token = res.userToken;
         localStorage.setItem('token', token);
-        this._AuthService.checkLoginStatus();
-        this._UserService.setScore(res.score);
-        
-        // Reload navbar
-        if (this.navbar) {
-          this.navbar.reloadNavbar();
-        }
-        
-        // Wait for the role checking to complete before navigating
-        setTimeout(() => {
-          const isAdmin = this._AuthService.isAdmin.getValue();
-          const isInstructor = this._AuthService.isInstructor.getValue();
 
-          if (isAdmin) {
-            this._Router.navigate(['/admin']);
-          }else if (isInstructor){
-            this._Router.navigate(['/instructorDashboard']);
-          }else {
-            this._Router.navigate(['/home']);
-          }
-        }, 100);
+        this._AuthService.checkLoginStatus();
+
+        this._UserService.setScore(res.score);
+
+  
+        const role = this._AuthService.role();
+
+        if (role === 'Admin') {
+          this._Router.navigate(['/admin']);
+        } else if (role === 'Instructor') {
+          this._Router.navigate(['/instructorDashboard']);
+        } else {
+          this._Router.navigate(['/home']);
+        }
       },
       error: (err) => {
         if (Array.isArray(err.error?.errors)) {

@@ -1,143 +1,134 @@
 import { AuthService } from './../../services/auth.service';
 import { UserService } from './../../services/user.service';
 import { CommonModule } from '@angular/common';
-
-import { Component, OnInit } from '@angular/core';
+import { Component, effect, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router, RouterLink, RouterModule } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
+  standalone: true,
   imports: [CommonModule, RouterLink, RouterModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
+
+  @ViewChild('navElement', { static: true }) navElement!: ElementRef;
+
+  get nativeElement(): HTMLElement {
+    return this.navElement?.nativeElement;
+  }
+
+  getHeight(): number {
+    return this.nativeElement?.offsetHeight || 0;
+  }
+
+  @ViewChild('navCollapse', { static: true }) navCollapse!: ElementRef;
+
+
+
+
+
+
   isLogin: boolean = false;
   currentRoute: string = '';
-
-  navs: any = [];
+  imagePreview: string | ArrayBuffer | null = null;
+  user: any = {};
+  navs: any[] = [];
 
   constructor(
     private _AuthService: AuthService,
     private _UserService: UserService,
     private _Router: Router
-  ) {}
-  user: any = {};
-  imagePreview: string | ArrayBuffer | null = null;
+  ) {
+    // Reactively track signals
+    effect(() => {
+      this.isLogin = this._AuthService.isLogin();
+      const role = this._AuthService.role();
+      this.setNavsByRole(role);
 
-  ngOnInit(): void {
-    this._AuthService.checkLoginStatus(); // أول حاجة، شوف هو لوج إن ولا لا
+      // update UI from signals
+      this.imagePreview = this._UserService.profileImage();
+      this.user.username = this._UserService.name();
 
-    this._AuthService.isLogin$.subscribe((state) => {
-      this.isLogin = state;
-
-      if (state) {
-        this._AuthService.isAdmin$.subscribe((adminState) => {
-          if (adminState) {
-            this.navs = [
-              {
-                name: 'Admin',
-                link: '/admin',
-              },
-              {
-                name: 'Assignments',
-                link: '/studentsAssignments',
-              },
-              {
-                name: 'Courses',
-                link: '/courses',
-              },
-            ];
-          } else {
-            this._AuthService.isInstructor$.subscribe((instructorState) => {
-              if (instructorState) {
-                this.navs = [
-                  {
-                    name: 'Dashboard',
-                    link: '/instructorDashboard',
-                  },
-                  {
-                    name: 'Assignments',
-                    link: '/studentsAssignments',
-                  },
-                  {
-                    name: 'Courses',
-                    link: '/courses',
-                  },
-                ];
-              } else {
-                this.navs = [
-                  {
-                    name: 'Home',
-                    link: '/home',
-                  },
-                  {
-                    name: 'Placement Test',
-                    link: '/PlacementTest',
-                  },
-                  {
-                    name: 'Cart',
-                    link: '/Cart',
-                  },
-                  {
-                    name: 'Enrolled Courses',
-                    link: '/subscribed-courses',
-                  },
-                ];
-              }
-            });
-          }
-        });
-
-        const decodedToken = this._AuthService.getDecodedToken();
-        this.user = decodedToken;
-        this._UserService.getProfile().subscribe({
-          next: (res) => {
-            // console.log(res);
-            this._UserService.setScore(res.user.score);
-            this._UserService.setProfileImage(res.user.profile_pic.secure_url);
-            this._UserService.setname(res.user.userName);
-            this._UserService.setEmail(res.user.email);
-
-            this._UserService.$profileImage.subscribe((url) => {
-              this.imagePreview = url;
-            });
-            this._UserService.$name.subscribe((name) => {
-              if (name) {
-                this.user.username = name;
-              }
-            });
-          },
-        });
+      // load profile when logged in
+      if (this.isLogin) {
+        this.getProfileData();
       } else {
         this.user = {};
-        this.navs = [];
+        this.imagePreview = null;
       }
     });
+  }
 
+  ngOnInit(): void {
+    this._AuthService.checkLoginStatus();
     this._Router.events.subscribe(() => {
       this.currentRoute = this._Router.url;
     });
   }
 
-  async logout() {
-    // this.isLogin = false
-    this._AuthService.setIsLogin(false);
-    await localStorage.removeItem('token');
-    this._Router.navigate(['/']);
-    this.imagePreview = null;
-    this.navs = [];
+  setNavsByRole(role: string | null) {
+    if (role === 'Admin') {
+      this.navs = [
+        { name: 'Admin', link: '/admin' },
+        { name: 'Assignments', link: '/studentsAssignments' },
+        { name: 'Courses', link: '/courses' },
+      ];
+    } else if (role === 'Instructor') {
+      this.navs = [
+        { name: 'Dashboard', link: '/instructorDashboard' },
+        { name: 'Assignments', link: '/studentsAssignments' },
+        { name: 'Courses', link: '/courses' },
+      ];
+    } else if (role === 'Student') {
+      this.navs = [
+        { name: 'Home', link: '/home' },
+        { name: 'Placement Test', link: '/PlacementTest' },
+        { name: 'Cart', link: '/Cart' },
+        { name: 'Enrolled Courses', link: '/subscribed-courses' },
+      ];
+    } else {
+      this.navs = [];
+    }
   }
 
-  reloadNavbar() {
-    this._AuthService.checkLoginStatus();
+  async logout() {
+    this._AuthService.setIsLogin(false);
+    this._AuthService.setRole(null);
+    await localStorage.removeItem('token');
+    this._Router.navigate(['/']);
+
+    this.imagePreview = null;
+    this.user = {};
+    this.navs = [];
+    this._UserService.setProfileImage(null);
+    this._UserService.setName(undefined);
   }
 
   login() {
     this._Router.navigate(['/login']);
   }
+
   register() {
     this._Router.navigate(['/register']);
+  }
+
+  getProfileData() {
+    this._UserService.getProfile().subscribe({
+      next: (res) => {
+        this._UserService.setScore(res.user.score);
+        this._UserService.setProfileImage(res.user.profile_pic.secure_url);
+        this._UserService.setName(res.user.username);
+        this._UserService.setEmail(res.user.email);
+        this.imagePreview = this._UserService.profileImage();
+        this.user.username = this._UserService.name();
+
+        
+      },
+      error: (err) => {
+        console.error('Failed to load profile data', err);
+      },
+    });
   }
 }
