@@ -35,6 +35,8 @@ p {
   min-height: 100vh;
   padding-top: 3rem;
   padding-bottom: 3rem;
+  padding-right: 15px;
+  padding-left: 15px;
 }
 
 .course-card {
