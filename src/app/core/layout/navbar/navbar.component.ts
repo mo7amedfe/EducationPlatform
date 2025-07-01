@@ -84,7 +84,7 @@ export class NavbarComponent implements OnInit {
     } else if (role === 'Student') {
       this.navs = [
         { name: 'Home', link: '/home' },
-        { name: 'Placement Test', link: '/PlacementTest' },
+        // { name: 'Placement Test', link: '/PlacementTest' },
         { name: 'Cart', link: '/Cart' },
         { name: 'Enrolled Courses', link: '/subscribed-courses' },
       ];
