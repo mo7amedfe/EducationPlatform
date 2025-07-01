@@ -51,5 +51,6 @@ background-color: rgba(0, 0, 0, 0.3);
   @media (min-width: 0px) and (max-width: 768px) {
    .btns-container{
     margin-top: 14px !important;
+    margin-bottom: 14px;
    }
   }
