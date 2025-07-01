@@ -21,11 +21,31 @@
 
 
 
-
-<div *ngIf="isSubmitted" class="container p-4 border rounded shadow bg-white w-100 d-flex flex-wrap align-items-center mt-2">
-  <div  class="">
-    <h2 *ngIf="!isSubmittedBefore">Submit Completed , your Score: <span class="text-danger">{{score}}</span></h2>
-    <h2 *ngIf="isSubmittedBefore">You are Submitted this test before .</h2>
-
+<div class="d-flex py-5 flex-wrap align-items-center justify-content-center">
+  <div *ngIf="isSubmitted" class="container p-4 border rounded shadow bg-white w-75 d-flex flex-wrap align-items-center justify-content-center ">
+    <div class="text-center w-100">
+      <ng-container *ngIf="!isSubmittedBefore; else alreadySubmitted">
+        <div class="mb-3">
+          <span class="display-4 text-success">
+            <i class="bi bi-check-circle-fill"></i>
+          </span>
+        </div>
+        <h2 class="mb-2">Test Submitted!</h2>
+        <p class="lead">Your Score: <span class="fw-bold text-primary" style="font-size: 2rem;">{{score}}</span></p>
+        <!-- Optional: Add a button to retake or go to courses -->
+        <!-- <button class="btn btn-outline-primary mt-3" (click)="retakeTest()">Retake Test</button> -->
+      </ng-container>
+      <ng-template #alreadySubmitted>
+        <div class="mb-3">
+          <span class="display-4 text-warning">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+          </span>
+        </div>
+        <h2 class="mb-2 text-warning">Already Submitted</h2>
+        <p class="lead">You have already submitted this test before.</p>
+      </ng-template>
+    </div>
   </div>
+</div>
+
 
