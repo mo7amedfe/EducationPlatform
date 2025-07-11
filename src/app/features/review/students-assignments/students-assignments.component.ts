@@ -87,7 +87,11 @@ export class StudentsAssignmentsComponent implements OnInit {
   downloadSubmission(submission_id: string) {
     this._ReviewService.downloadAssignmentSubmission(submission_id).subscribe({
       next: (res) => {
-        window.open(`${res.url}`, '_blank');
+        const link = document.createElement('a');
+        link.href = res.url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.click();
       },
       error: (err) => {
         console.error('Error downloading submission:', err);
@@ -95,5 +99,6 @@ export class StudentsAssignmentsComponent implements OnInit {
       },
     });
   }
+  
 
 }

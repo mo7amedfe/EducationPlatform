@@ -96,29 +96,40 @@ export class EnrolledCourseDataComponent implements OnInit {
   }
 
   startFinalTest() {
-    // Navigate to the final test page or open a modal
-    // Example: this.router.navigate(['/final-test', this.courseId]);
+  
     alert('Final Course Test will start!');
   }
 
   getAssignment() {
     if (!this.selectedLesson) return;
+  
     this._CourseDataService.getLessonAssignment(this.selectedLesson._id).subscribe({
       next: (res) => {
-        window.open(`${res.url}`, '_blank'); 
+        // Create and trigger a link
+        const link = document.createElement('a');
+        link.href = res.url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.click();
       },
       error: (err) => {
         console.error('Error downloading submission:', err);
         alert('Failed to download Assignment. Please try again later.');
       }
     });
-  }    
+  }
+  
 
   downloadSubmission(submission_id: string) {
     if (!this.selectedLesson) return;
+  
     this._CourseDataService.dowmloadSubmission(submission_id).subscribe({
       next: (res) => {
-        window.open(`${res.url}`, '_blank');
+        const link = document.createElement('a');
+        link.href = res.url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.click();
       },
       error: (err) => {
         console.error('Error downloading submission:', err);
@@ -126,4 +137,5 @@ export class EnrolledCourseDataComponent implements OnInit {
       },
     });
   }
+  
 }

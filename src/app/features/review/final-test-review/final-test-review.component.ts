@@ -71,19 +71,23 @@ export class FinalTestReviewComponent implements OnInit {
   }
 
   downloadSubmission(submission: any) {
-    let submissionId = submission._id;
+    const submissionId = submission._id;
+  
     this._ReviewService.downloadFinalTestSubmission(submissionId).subscribe({
       next: (res) => {
-      
-        window.open(res.url, '_blank');
-      
+        const link = document.createElement('a');
+        link.href = res.url;
+        link.target = '_blank'; // opens in new tab
+        link.rel = 'noopener noreferrer';
+        link.click();
       },
       error: (err) => {
         console.error('Error downloading file:', err);
+        alert('Failed to download submission. Please try again later.');
       },
     });
   }
-
+  
   giveFeedback(submission: any) {
     let body = {
       feedback: submission.feedback,
