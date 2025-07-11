@@ -9,16 +9,15 @@ export class CourseDataService {
   constructor(private _HttpClient: HttpClient) {}
 
   baseUrl: string = 'https://education-platform-back-end.vercel.app';
+  // baseUrl:string="http://localhost:3000"
+
 
   getCourseData(courseId: string) {
     return this._HttpClient.get(`${this.baseUrl}/leason/course/${courseId}`);
   }
   getLessonAssignment(lessonId: string): Observable<any> {
     return this._HttpClient.get(
-      `${this.baseUrl}/${lessonId}/assignment/download`,
-      {
-        responseType: 'blob' as 'blob',
-      }
+      `${this.baseUrl}/leason/${lessonId}/assignment/download`
     );
   }
   uploadAssignment(selectedLessonId: any, formData: any): Observable<any> {
@@ -29,16 +28,13 @@ export class CourseDataService {
   }
   dowmloadSubmission(submissionId: any): Observable<any> {
     return this._HttpClient.get(
-      `${this.baseUrl}/submittedAssignment/my-submissions/${submissionId}/download`,
-      { responseType: 'blob' }
+      `${this.baseUrl}/submittedAssignment/my-submissions/${submissionId}/download`
     );
   }
   downloadCourseFinalTest(courseId: any): Observable<any> {
     return this._HttpClient.get(
-      `${this.baseUrl}/finalTest/course/${courseId}/file`,
-      {
-        responseType: 'blob',
-      }
+      `${this.baseUrl}/finalTest/course/${courseId}/file`
+    
     );
   }
   uploadFinalTest(courseId: any, formData: any): Observable<any> {

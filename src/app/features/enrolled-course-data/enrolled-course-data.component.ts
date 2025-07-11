@@ -103,35 +103,22 @@ export class EnrolledCourseDataComponent implements OnInit {
 
   getAssignment() {
     if (!this.selectedLesson) return;
+    this._CourseDataService.getLessonAssignment(this.selectedLesson._id).subscribe({
+      next: (res) => {
+        window.open(`${res.url}`, '_blank'); 
+      },
+      error: (err) => {
+        console.error('Error downloading submission:', err);
+        alert('Failed to download Assignment. Please try again later.');
+      }
+    });
+  }    
 
-    this._CourseDataService
-      .getLessonAssignment(this.selectedLesson._id)
-      .subscribe((blob: Blob) => {
-        const contentDisposition = 'attachment; filename=assignment.pdf';
-
-        const fileName = 'assignment.pdf';
-
-        const link = document.createElement('a');
-        link.href = window.URL.createObjectURL(blob);
-        link.download = fileName;
-        link.click();
-        window.URL.revokeObjectURL(link.href);
-      });
-  }
   downloadSubmission(submission_id: string) {
     if (!this.selectedLesson) return;
-    // Example: get token from AuthService or localStorage
     this._CourseDataService.dowmloadSubmission(submission_id).subscribe({
-      next: (response: Blob) => {
-        const blob = new Blob([response]);
-        const url = URL.createObjectURL(blob);
-
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `submission_${submission_id}.pdf`; // You can adjust the filename/extension as needed
-        a.click();
-
-        URL.revokeObjectURL(url);
+      next: (res) => {
+        window.open(`${res.url}`, '_blank');
       },
       error: (err) => {
         console.error('Error downloading submission:', err);

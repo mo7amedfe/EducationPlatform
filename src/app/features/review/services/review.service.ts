@@ -7,39 +7,34 @@ import { Observable } from 'rxjs';
 })
 export class ReviewService {
   private _HttpClient = inject(HttpClient);
-
+  baseUrl: string = 'https://education-platform-back-end.vercel.app';
   getFinalTestSubmissions(): Observable<any> {
-    return this._HttpClient.get('http://localhost:3000/finalTest/review');
+    return this._HttpClient.get(`${this.baseUrl}/finalTest/review`);
   }
   downloadFinalTestSubmission(submissionId: any): Observable<any> {
     return this._HttpClient.get(
-      `http://localhost:3000/finalTest/submission/${submissionId}/download`,
-      {
-        responseType: 'blob',
-      }
+      `${this.baseUrl}/finalTest/submission/${submissionId}/download`
     );
   }
   giveFinalTestFeedback(submissionId: any, body: any): Observable<any> {
     return this._HttpClient.post(
-      `http://localhost:3000/finalTest/${submissionId}/grade`,
+      `${this.baseUrl}/finalTest/${submissionId}/grade`,
       body
     );
   }
 
   getAssignmentsSubmissions(): Observable<any> {
-    return this._HttpClient.get(
-      'http://localhost:3000/submittedAssignment/review'
-    );
+    return this._HttpClient.get(`${this.baseUrl}/submittedAssignment/review`);
   }
   giveAssignmentFeedback(submissionId: any, body: any): Observable<any> {
     return this._HttpClient.post(
-      `http://localhost:3000/submittedAssignment/${submissionId}/grade`,
+      `${this.baseUrl}/submittedAssignment/${submissionId}/grade`,
       body
     );
   }
   downloadAssignmentSubmission(submissionId: any): Observable<any> {
-    return this._HttpClient.get(`http://localhost:3000/submittedAssignment/${submissionId}/download`,
-      { responseType: 'blob' }
+    return this._HttpClient.get(
+      `${this.baseUrl}/submittedAssignment/${submissionId}/download`
     );
   }
 }

@@ -23,11 +23,8 @@ export class CourseFinalTestComponent implements OnInit {
   message: any = '';
   isPassed: boolean = false;
 
- 
-    private _ActivatedRoute=inject(ActivatedRoute)
-   
-    private _CourseDataService=inject(CourseDataService)
- 
+  private _ActivatedRoute = inject(ActivatedRoute);
+  private _CourseDataService = inject(CourseDataService);
 
   ngOnInit(): void {
     this.courseId = this._ActivatedRoute.snapshot.params['id'];
@@ -37,40 +34,36 @@ export class CourseFinalTestComponent implements OnInit {
   loadFinalTest() {
     this.isLoadingFinalTest = true;
 
-
-  this._CourseDataService.downloadCourseFinalTest(this.courseId).subscribe({
-        next: (res: Blob) => {
-          this.isPassed = true;
-          const fileURL = URL.createObjectURL(res);
-          this.finalTestUrl = fileURL;
-          this.isLoadingFinalTest = false;
-        },
-        error: (err) => {
-          console.log(err);
-          this.isPassed=false
-          this.isLoadingFinalTest = false;
-          this.message = err.error?.message || null;
-          this.showNotification(this.message, false);
-        },
-      });
-  }
-  DownloadFinalTest() {
-
     this._CourseDataService.downloadCourseFinalTest(this.courseId).subscribe({
-        next: (res: Blob) => {
-          const blob = new Blob([res], { type: res.type });
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'final-test.pdf';
-          a.click();
-          window.URL.revokeObjectURL(url);
-        },
-        error: (err) => {
-          console.error('Error downloading file:', err);
-          this.showNotification('Error downloading final test.', false);
-        },
-      });
+      next: (res: any) => {
+        this.finalTestUrl = res.url; // Use Cloudinary URL directly
+        this.isPassed = true;
+        this.isLoadingFinalTest = false;
+      },
+      error: (err) => {
+        console.log(err);
+        this.isPassed = false;
+        this.isLoadingFinalTest = false;
+        this.message = err.error?.message || 'Error loading final test.';
+        this.showNotification(this.message, false);
+      },
+    });
+  }
+
+  DownloadFinalTest() {
+    this._CourseDataService.downloadCourseFinalTest(this.courseId).subscribe({
+      next: (res: any) => {
+        if (res.url) {
+          window.open(res.url, '_blank');
+        } else {
+          this.showNotification('Final test file not found.', false);
+        }
+      },
+      error: (err) => {
+        console.error('Error downloading file:', err);
+        this.showNotification('Error downloading final test.', false);
+      },
+    });
   }
 
   onFileSelected(event: Event) {
@@ -87,26 +80,25 @@ export class CourseFinalTestComponent implements OnInit {
     const formData = new FormData();
     formData.append('finalTestFile', this.selectedFile);
 
-    this._CourseDataService.uploadFinalTest(this.courseId,formData).subscribe({
-        next: () => {
-          this.showNotification('Answer submitted successfully!');
-          this.selectedFile = null;
-          this.isUploading = false;
-        },
-        error: (err) => {
-          console.error('Error uploading file:', err);
-          const errorMessage =
-            err.error?.message || 'Error uploading file. Please try again.';
-          this.showNotification(errorMessage, false);
-          this.isUploading = false;
-        },
-      });
+    this._CourseDataService.uploadFinalTest(this.courseId, formData).subscribe({
+      next: () => {
+        this.showNotification('Answer submitted successfully!');
+        this.selectedFile = null;
+        this.isUploading = false;
+      },
+      error: (err) => {
+        console.error('Error uploading file:', err);
+        const errorMessage = err.error?.message || 'Error uploading file. Please try again.';
+        this.showNotification(errorMessage, false);
+        this.isUploading = false;
+      },
+    });
   }
 
   showNotification(message: string, isSuccess: boolean = true) {
     this.message = message;
     this.showMessage = true;
-    
+
     setTimeout(() => {
       this.showMessage = false;
     }, 4000);

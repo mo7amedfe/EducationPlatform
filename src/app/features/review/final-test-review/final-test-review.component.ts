@@ -73,13 +73,10 @@ export class FinalTestReviewComponent implements OnInit {
   downloadSubmission(submission: any) {
     let submissionId = submission._id;
     this._ReviewService.downloadFinalTestSubmission(submissionId).subscribe({
-      next: (blob: Blob) => {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = submission.file.filename || 'submission.pdf';
-        a.click();
-        URL.revokeObjectURL(url);
+      next: (res) => {
+      
+        window.open(res.url, '_blank');
+      
       },
       error: (err) => {
         console.error('Error downloading file:', err);

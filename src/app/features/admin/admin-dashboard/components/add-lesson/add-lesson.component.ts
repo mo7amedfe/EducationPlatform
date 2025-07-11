@@ -18,7 +18,7 @@ import { CoursesService } from '../../../../../core/services/courses.service';
 })
 export class AddLessonComponent {
   private _AdminService = inject(AdminService);
-  private _CoursesService=inject(CoursesService)
+  private _CoursesService = inject(CoursesService);
 
   isLoading: boolean = false;
   allCourses: any = [];
@@ -34,7 +34,6 @@ export class AddLessonComponent {
   selectedVedioFile: File | null = null;
 
   AddLesson = new FormGroup({
-    courseId: new FormControl(this.selectedCourseId, Validators.required),
     LessonTitle: new FormControl(null, Validators.required),
     LessonDescription: new FormControl(null, Validators.required),
   });
@@ -86,40 +85,103 @@ export class AddLessonComponent {
       reader.readAsDataURL(file);
     }
   }
-
-
+  assignmentData = new FormData();
   AddLessonSubmit() {
     this.isLoading = true;
-
+    if (!this.selectedCourseId) {
+      this.isLoading = false;
+      this.isNotificationSuccess = false;
+      this.notificationMessage = 'please select a course for the lesson.';
+      this.IsNotificationVisible = true;
+      setTimeout(() => (this.IsNotificationVisible = false), 3000);
+      return;
+    }
     const lessonData = {
-      courseId: this.AddLesson.get('courseId')?.value ?? this.selectedCourseId,
+      courseId: this.selectedCourseId,
       LessonTitle: this.AddLesson.get('LessonTitle')?.value,
       LessonDescription: this.AddLesson.get('LessonDescription')?.value,
     };
 
-    this._AdminService.addLessonWithMedia(lessonData, this.selectedVedioFile, this.selectedFile)
-      .pipe(finalize(() => (this.isLoading = false)))
+    this.assignmentData.append(
+      'title',
+      this.assignmentForm.get('title')?.value ?? ''
+    );
+    this.assignmentData.append(
+      'description',
+      this.assignmentForm.get('description')?.value ?? ''
+    );
+    this.assignmentData.append(
+      'dueDate',
+      this.assignmentForm.get('dueDate')?.value ?? ''
+    );
+    if (this.selectedFile) {
+      this.assignmentData.append('file', this.selectedFile);
+    }
+    this._AdminService.createLesson(lessonData).subscribe({
+      next: (res) => {
+        let newLessonId = res.leason._id;
+        this.isNotificationSuccess = true;
+        this.notificationMessage = 'Lesson created successfuly.';
+        this.IsNotificationVisible = true;
+        setTimeout(() => (this.IsNotificationVisible = false), 3000);
+
+        this.addVideoToLesson(newLessonId);
+      },
+    });
+  }
+
+  addAssignmentToLesson(assignmentData: any, lessonId: any) {
+    this._AdminService
+      .AddAssignmentToLesson(assignmentData, lessonId)
       .subscribe({
         next: (res) => {
           this.isNotificationSuccess = true;
-          this.notificationMessage = res.message;
+          this.notificationMessage = 'Assignment uploaded successfuly.';
           this.IsNotificationVisible = true;
           setTimeout(() => (this.IsNotificationVisible = false), 3000);
-          this.AddLesson.reset();
-          this.selectedCourse = 'Choose Course';
-          this.selectedCourseId = null;
-          this.videoPreview = null;
-          this.selectedFile = null;
-          this.selectedVedioFile = null;
-          this.assignmentForm.reset();
+          this.isLoading=false
         },
-        error: () => {
+        error: (err) => {
           this.isNotificationSuccess = false;
-          this.notificationMessage = 'Error adding lesson.';
+          this.notificationMessage = 'Error uploading Assignment.';
           this.IsNotificationVisible = true;
           setTimeout(() => (this.IsNotificationVisible = false), 3000);
+          this.isLoading=false
         },
       });
   }
-
+  addVideoToLesson(lessonId: any) {
+    if (this.selectedVedioFile) {
+      this._AdminService
+        .addVideoToLesson(this.selectedVedioFile, lessonId)
+        .subscribe({
+          next: (res) => {
+            this.isNotificationSuccess = true;
+            this.notificationMessage = 'Video Uploaded successfuly.';
+            this.IsNotificationVisible = true;
+            setTimeout(() => (this.IsNotificationVisible = false), 3000);
+            if (this.selectedFile) {
+              this.addAssignmentToLesson(this.assignmentData,lessonId)
+            }else{
+              this.isLoading=false
+            }
+          },
+          error: (err) => {
+            this.isNotificationSuccess = false;
+            this.notificationMessage = 'Error uploading Video.';
+            this.IsNotificationVisible = true;
+            setTimeout(() => (this.IsNotificationVisible = false), 3000);
+            if (this.selectedFile) {
+              this.addAssignmentToLesson(this.assignmentData,lessonId)
+            }else{
+              this.isLoading=false
+            }
+          },
+        });
+    }else if(this.selectedFile){
+      this.addAssignmentToLesson(this.assignmentData,lessonId)
+    }else{
+      this.isLoading=false
+    }
+  }
 }

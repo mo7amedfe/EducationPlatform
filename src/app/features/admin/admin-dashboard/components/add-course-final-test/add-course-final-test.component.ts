@@ -108,6 +108,8 @@ export class AddCourseFinalTestComponent {
 
     this._AdminService.addFinalTest(this.selectedCourseForFinalTestId,formData).subscribe({
         next: (res) => {
+          console.log("done");
+          console.log(res);        
           this.isLoading=false
           this.isNotificationSuccess = true;
           this.notificationMessage = 'Final test uploaded successfully!';
