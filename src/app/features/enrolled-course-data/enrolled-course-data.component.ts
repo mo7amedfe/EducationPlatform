@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { CourseDataService } from './../../core/services/course-data.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
@@ -28,7 +29,8 @@ export class EnrolledCourseDataComponent implements OnInit {
 
   constructor(
     private _ActivatedRoute: ActivatedRoute,
-    private _CourseDataService: CourseDataService
+    private _CourseDataService: CourseDataService,
+    private _HttpClient: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -96,46 +98,51 @@ export class EnrolledCourseDataComponent implements OnInit {
   }
 
   startFinalTest() {
-  
     alert('Final Course Test will start!');
   }
 
   getAssignment() {
     if (!this.selectedLesson) return;
-  
-    this._CourseDataService.getLessonAssignment(this.selectedLesson._id).subscribe({
-      next: (res) => {
-        // Create and trigger a link
-        const link = document.createElement('a');
-        link.href = res.url;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-        link.click();
-      },
-      error: (err) => {
-        console.error('Error downloading submission:', err);
-        alert('Failed to download Assignment. Please try again later.');
-      }
-    });
+
+    this._CourseDataService
+      .getLessonAssignment(this.selectedLesson._id)
+      .subscribe({
+        next: (blob: Blob) => {
+          const fileURL = URL.createObjectURL(blob);
+
+          const link = document.createElement('a');
+          link.href = fileURL;
+          link.download = 'assignment.pdf'; // <-- optional: set your filename
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+
+          // Clean up object URL
+          URL.revokeObjectURL(fileURL);
+        },
+        error: (err) => {
+          console.error('Error downloading assignment:', err);
+          alert('Failed to download assignment. Please try again later.');
+        },
+      });
   }
-  
 
   downloadSubmission(submission_id: string) {
     if (!this.selectedLesson) return;
-  
+
     this._CourseDataService.dowmloadSubmission(submission_id).subscribe({
-      next: (res) => {
+      next: (blob) => {
+        const file = new Blob([blob], { type: 'application/pdf' });
         const link = document.createElement('a');
-        link.href = res.url;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
+        link.href = URL.createObjectURL(file);
+        link.download = 'submission.pdf';
         link.click();
+        URL.revokeObjectURL(link.href);
       },
       error: (err) => {
         console.error('Error downloading submission:', err);
-        alert('Failed to download submission. Please try again later.');
+        alert('Failed to download submission.');
       },
     });
   }
-  
 }

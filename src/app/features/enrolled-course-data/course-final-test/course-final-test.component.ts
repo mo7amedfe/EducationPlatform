@@ -33,15 +33,24 @@ export class CourseFinalTestComponent implements OnInit {
 
   loadFinalTest() {
     this.isLoadingFinalTest = true;
-
+  
     this._CourseDataService.downloadCourseFinalTest(this.courseId).subscribe({
-      next: (res: any) => {
-        this.finalTestUrl = res.url; // Use Cloudinary URL directly
-        this.isPassed = true;
+      next: (res: Blob) => {
+        if (res && res.size > 0) {
+          const blob = new Blob([res], { type: 'application/pdf' });
+          const url = window.URL.createObjectURL(blob); 
+          this.finalTestUrl = url;
+          this.isPassed = true;
+        } else {
+          this.finalTestUrl = null;
+          this.isPassed = false;
+        }
+  
         this.isLoadingFinalTest = false;
       },
       error: (err) => {
         console.log(err);
+        this.finalTestUrl = null;
         this.isPassed = false;
         this.isLoadingFinalTest = false;
         this.message = err.error?.message || 'Error loading final test.';
@@ -49,15 +58,16 @@ export class CourseFinalTestComponent implements OnInit {
       },
     });
   }
-
+  
   DownloadFinalTest() {
     this._CourseDataService.downloadCourseFinalTest(this.courseId).subscribe({
-      next: (res: any) => {
-        if (res.url) {
-          window.open(res.url, '_blank');
-        } else {
-          this.showNotification('Final test file not found.', false);
-        }
+      next: (blob: Blob) => {
+        const file = new Blob([blob], { type: 'application/pdf' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(file);
+        link.download = 'final-test.pdf';
+        link.click();
+        URL.revokeObjectURL(link.href);
       },
       error: (err) => {
         console.error('Error downloading file:', err);
@@ -65,7 +75,7 @@ export class CourseFinalTestComponent implements OnInit {
       },
     });
   }
-
+  
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {

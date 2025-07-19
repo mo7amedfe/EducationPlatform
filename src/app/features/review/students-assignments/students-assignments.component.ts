@@ -86,12 +86,14 @@ export class StudentsAssignmentsComponent implements OnInit {
   }
   downloadSubmission(submission_id: string) {
     this._ReviewService.downloadAssignmentSubmission(submission_id).subscribe({
-      next: (res) => {
+      next: (blob) => {
+        const file = new Blob([blob], { type: 'application/pdf' });
         const link = document.createElement('a');
-        link.href = res.url;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
+        link.href = URL.createObjectURL(file);
+  
+        link.download = 'Assignment-submission.pdf';
         link.click();
+        URL.revokeObjectURL(link.href);
       },
       error: (err) => {
         console.error('Error downloading submission:', err);
