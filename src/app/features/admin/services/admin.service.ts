@@ -8,7 +8,8 @@ import { catchError, map, Observable, of, switchMap, tap } from 'rxjs';
 export class AdminService {
   private _HttpClient = inject(HttpClient);
 
-  baseUrl: string = 'https://education-platform-back-end.vercel.app';
+  // baseUrl: string = 'https://education-platform-back-end.vercel.app';
+  baseUrl:string="http://localhost:3000"
 
   getAllUsers(): Observable<any> {
     return this._HttpClient.get(`${this.baseUrl}/user/allUsers`);

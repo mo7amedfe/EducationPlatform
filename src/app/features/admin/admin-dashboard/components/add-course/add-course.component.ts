@@ -59,6 +59,8 @@ export class AddCourseComponent {
         const courseId = response.courseId;
         this._AdminService.AddImageToCourse(courseId, this.selectedImageFile!).subscribe({
           next: (imageResponse) => {
+            console.log(imageResponse);
+            
             this.isLoading = false;
             this.isNotificationSuccess = true;
             this.notificationMessage = 'Image added successfully!';
@@ -72,6 +74,8 @@ export class AddCourseComponent {
             this.AddCourse.reset();
           },
           error: (error) => {
+            console.log(error);
+            
             this.isLoading = false;
             this.notificationMessage = 'Error adding image to course.';
             this.isNotificationSuccess = false;
