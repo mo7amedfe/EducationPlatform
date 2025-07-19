@@ -8,8 +8,8 @@ import { Observable } from 'rxjs';
 export class CourseDataService {
   constructor(private _HttpClient: HttpClient) {}
 
-  // baseUrl: string = 'https://education-platform-back-end.vercel.app';
-  baseUrl:string="http://localhost:3000"
+  baseUrl: string = 'https://education-platform-back-end.vercel.app';
+  // baseUrl:string="http://localhost:3000"
 
 
   getCourseData(courseId: string) {
