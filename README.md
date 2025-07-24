@@ -1,59 +1,80 @@
-# Frontend2
+# 📚 Educational Platform
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.15.
+A full-featured, role-based e-learning platform built with Angular and Node.js. It allows Admins, Instructors, and Students to interact within a dynamic learning environment, supporting course creation, enrollment, assignments, tests, and feedback.
 
-## Development server
+---
+# Backend Repo Link
 
-To start a local development server, run:
+https://github.com/mo7amedfe/EducationPlatformBackEnd
+
+## 🚀 Features
+
+### 👨‍🎓 Student Role
+- Register or log in as a student
+- Browse and enroll in available courses
+- Access course content (videos, files, etc.)
+- Submit assignments and take final tests
+- Receive feedback from instructors
+- View grades and submissions
+
+### 🧑‍🏫 Instructor Role
+- Log in and access instructor dashboard
+- Create and manage courses
+- Add lessons, upload video content and resources
+- Create assignments and **final tests** for each course
+- **Review student submissions and final test answers**
+- **Provide feedback and grades for assignments and tests**
+
+### 🛠 Admin Role
+- Log in to the admin panel
+- View and manage all users (students & instructors)
+- Create and manage courses
+- Add or remove lessons or tests
+- Maintain the integrity and structure of the platform
+
+---
+
+## 🧪 Demo Credentials
+
+You can use the following demo accounts to test the system:
+
+### 🔐 Admin Login
+- **Email:** `admin@gmail.com`  
+- **Password:** `@Mm123456`
+
+### 👨‍🏫 Instructor Login
+- **Email:** `ins@gmail.com`  
+- **Password:** `@Mm123456`
+
+### 👨‍🎓 Student Login
+- **Email:** `std@gmail.com`  
+- **Password:** `@Mm12345`  
+Or you can register a new student account from the login page.
+
+---
+
+## 🧰 Tech Stack
+
+- **Frontend:** Angular 19, RxJS, Angular Forms, bootstrap  
+- **Backend:** Node.js, Express.js  
+- **Database:** MongoDB  
+- **Authentication:** JWT-based login system  
+- **File Uploads:** Cloudinary 
+- **Deployment:**  Vercel
+
+---
+
+## 📦 Installation & Setup
 
 ```bash
+# Clone the repository
+git clone https://github.com/your-username/your-repo-name.git
+
+# Navigate to frontend
+cd frontend
+
+# Install frontend dependencies
+npm install
+
+# Run the Angular app
 ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
