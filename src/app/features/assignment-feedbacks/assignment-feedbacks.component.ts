@@ -19,6 +19,8 @@ private _UserService=inject(UserService)
 
     this._UserService.getAssignmentsFeedbacks().subscribe({
         next: (res: any) => {
+          console.log(res);
+          
           this.feedbacks = Array.isArray(res.submissions) ? res.submissions : [];
         }
       });

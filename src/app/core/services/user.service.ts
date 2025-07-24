@@ -9,6 +9,8 @@ export class UserService {
   private _HttpClient = inject(HttpClient);
 
   private BaseUrl = 'https://education-platform-back-end.vercel.app';
+  // BaseUrl:string="http://localhost:3000"
+  
 
   name = signal<string | undefined>(undefined);
   setName(name: string| undefined) {

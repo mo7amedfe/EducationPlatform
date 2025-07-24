@@ -16,7 +16,7 @@
         <h5 class="card-title">{{ feedback.courseName }}</h5>
         <p class="mb-1"><strong>Student Email:</strong> {{ feedback.studentEmail }}</p>
         <p class="mb-1"><strong>Submitted At:</strong> {{ feedback.submittedAt | date:'medium' }}</p>
-        <p class="mb-1"><strong>Status:</strong> 
+        <p class="mb-1"><strong>Status:</strong>
           <span class="badge" [ngClass]="{
             'bg-success': feedback.status === 'graded',
             'bg-warning': feedback.status !== 'graded'
@@ -24,6 +24,8 @@
         </p>
         <p class="mb-1"><strong>Rating:</strong> {{ feedback.rating || 'N/A' }}</p>
         <p class="mb-1"><strong>Feedback:</strong> {{ feedback.feedback || 'No feedback yet.' }}</p>
+        <p class="mb-1"><strong>Reviewer Name:</strong> {{ feedback.reviewerName || "unknown" }}</p>
+        <p class="mb-1"><strong>Reviewer Email:</strong> {{ feedback.reviewerEmail || "unknown" }}</p>
       </div>
     </div>
   </div>
