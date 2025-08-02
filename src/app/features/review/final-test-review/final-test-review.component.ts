@@ -18,9 +18,11 @@ export class FinalTestReviewComponent implements OnInit {
   courses: { courseId: string; courseName: string }[] = [];
   selectedCourse: string = '';
   isLoading = true; // Add loading state
+isLoadingFeedback = false;
 
   ngOnInit(): void {
     this.isLoading = true; // Set loading to true on init
+
     this.loadSubmissions();
   }
 
@@ -93,6 +95,7 @@ export class FinalTestReviewComponent implements OnInit {
   
   
   giveFeedback(submission: any) {
+    this.isLoadingFeedback = true;
     let body = {
       feedback: submission.feedback,
       rating: submission.rating,
@@ -103,7 +106,7 @@ export class FinalTestReviewComponent implements OnInit {
       this._ReviewService.giveFinalTestFeedback(submissionId,body).subscribe({
         next: (res: any) => {
           console.log('Feedback submitted successfully:', res);
-          alert('Feedback submitted successfully!');
+          this.isLoadingFeedback = false;
           const updated = res.submission;
 
           // Replace the old submission with the updated one from the server

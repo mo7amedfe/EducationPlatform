@@ -17,7 +17,7 @@ export class StudentsAssignmentsComponent implements OnInit {
   selectedCourse: string = '';
   uniqueCourses: string[] = [];
   isLoading = true;
-
+isLoadingFeedback = false;
   private _ReviewService = inject(ReviewService);
 
   ngOnInit(): void {
@@ -53,6 +53,7 @@ export class StudentsAssignmentsComponent implements OnInit {
   }
 
   giveFeedback(submission: any) {
+    this.isLoadingFeedback = true;
     let submissionId = submission._id;
 
     if (submission.rating < 0 || submission.rating > 5) {
@@ -69,7 +70,8 @@ export class StudentsAssignmentsComponent implements OnInit {
     this._ReviewService.giveAssignmentFeedback(submissionId, body).subscribe({
       next: (res: any) => {
         console.log('Feedback submitted successfully:', res);
-        alert('Feedback submitted successfully!');
+        this.isLoadingFeedback = false;
+
         const updated = res.submission;
 
         // Replace the old submission with the updated one from the server

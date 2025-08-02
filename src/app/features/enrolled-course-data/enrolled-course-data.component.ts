@@ -30,7 +30,7 @@ export class EnrolledCourseDataComponent implements OnInit {
   constructor(
     private _ActivatedRoute: ActivatedRoute,
     private _CourseDataService: CourseDataService,
-    private _HttpClient: HttpClient
+
   ) {}
 
   ngOnInit(): void {

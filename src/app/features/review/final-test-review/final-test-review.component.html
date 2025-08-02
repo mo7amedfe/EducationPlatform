@@ -62,7 +62,7 @@
                 min="1" max="5" placeholder="Enter rating" />
             </div>
 
-            <button class="btn btn-success" (click)="giveFeedback(submission)">
+            <button class="btn btn-success" (click)="giveFeedback(submission)" [disabled]="isLoadingFeedback">
               <i class="bi bi-check-circle"></i> Submit Feedback
             </button>
           </div>
