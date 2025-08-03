@@ -25,7 +25,7 @@
           </p>
 
           <p class="profile-info mb-2"><i class="fa-solid fa-envelope me-2"></i>{{ user.email }}</p>
-          <button (click)="isEditing=true" class="btn btn-primary btn-lg mt-3 px-4">Edit Profile</button>
+       
         </div>
         <div *ngIf="isEditing">
           <form (ngSubmit)="updateUserData()" class="edit-form">
@@ -45,6 +45,9 @@
             {{ message }}
           </div>
         </div>
+      </div>
+      <div class="w-100 d-flex justify-content-center my-3">
+        <button (click)="isEditing=true" class="btn btn-primary btn-lg">Edit Profile</button>
       </div>
     </div>
   </div>
