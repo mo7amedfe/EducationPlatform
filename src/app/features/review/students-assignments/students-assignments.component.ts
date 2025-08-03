@@ -3,13 +3,11 @@ import { inject, OnInit } from '@angular/core';
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { FinalTestReviewComponent } from '../final-test-review/final-test-review.component';
-
 @Component({
   selector: 'app-students-assignments',
   templateUrl: './students-assignments.component.html',
   styleUrls: ['./students-assignments.component.css'],
-  imports: [CommonModule, FormsModule, FinalTestReviewComponent],
+  imports: [CommonModule, FormsModule],
 })
 export class StudentsAssignmentsComponent implements OnInit {
 
@@ -18,10 +16,16 @@ export class StudentsAssignmentsComponent implements OnInit {
   selectedStatus: string = ''; // Add status filter
   uniqueCourses: string[] = [];
   isLoading = true;
-isLoadingFeedback = false;
+  isLoadingFeedback = false;
+  isLoadingSubmissions = false; // Add loading state for submissions
   private _ReviewService = inject(ReviewService);
 
   ngOnInit(): void {
+    this.loadSubmissions();
+  }
+
+  loadSubmissions() {
+    this.isLoadingSubmissions = true;
     this._ReviewService.getAssignmentsSubmissions().subscribe({
       next: (res: any) => {
         console.log('API Response:', res);
@@ -30,9 +34,11 @@ isLoadingFeedback = false;
           : [];
         this.extractUniqueCourses();
         this.isLoading = false;
+        this.isLoadingSubmissions = false;
       },
       error: (err: any) => {
         this.isLoading = false;
+        this.isLoadingSubmissions = false;
       },
     });
   }
@@ -101,6 +107,10 @@ isLoadingFeedback = false;
 
   onStatusCheckboxChange(status: string) {
     this.selectedStatus = status;
+  }
+
+  reloadSubmissions() {
+    this.loadSubmissions();
   }
   downloadSubmission(submission_id: string) {
     this._ReviewService.downloadAssignmentSubmission(submission_id).subscribe({

@@ -9,27 +9,38 @@
       <option *ngFor="let course of courses" [value]="course">{{ course }}</option>
     </select>
   </div>
+  
+  <!-- Loader -->
+  <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center my-5" style="min-height: 200px;">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <span class="ms-3">Loading feedbacks...</span>
+  </div>
 
-  <div *ngIf="filteredFeedbacks.length > 0; else noFeedbacks">
-    <div *ngFor="let feedback of filteredFeedbacks" class="card mb-3 shadow-sm">
-      <div class="card-body">
-        <h5 class="card-title">{{ feedback.courseName }}</h5>
-        <p class="mb-1"><strong>Student Email:</strong> {{ feedback.studentEmail }}</p>
-        <p class="mb-1"><strong>Submitted At:</strong> {{ feedback.submittedAt | date:'medium' }}</p>
-        <p class="mb-1"><strong>Status:</strong>
-          <span class="badge" [ngClass]="{
-            'bg-success': feedback.status === 'graded',
-            'bg-warning': feedback.status !== 'graded'
-          }">{{ feedback.status }}</span>
-        </p>
-        <p class="mb-1"><strong>Rating:</strong> {{ feedback.rating || 'N/A' }}</p>
-        <p class="mb-1"><strong>Feedback:</strong> {{ feedback.feedback || 'No feedback yet.' }}</p>
-        <p class="mb-1"><strong>Reviewer Name:</strong> {{ feedback.reviewerName || "unknown" }}</p>
-        <p class="mb-1"><strong>Reviewer Email:</strong> {{ feedback.reviewerEmail || "unknown" }}</p>
+  <!-- Main Content -->
+  <ng-container *ngIf="!isLoading">
+    <div *ngIf="filteredFeedbacks.length > 0; else noFeedbacks">
+      <div *ngFor="let feedback of filteredFeedbacks" class="card mb-3 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">{{ feedback.courseName }}</h5>
+          <p class="mb-1"><strong>Student Email:</strong> {{ feedback.studentEmail }}</p>
+          <p class="mb-1"><strong>Submitted At:</strong> {{ feedback.submittedAt | date:'medium' }}</p>
+          <p class="mb-1"><strong>Status:</strong>
+            <span class="badge" [ngClass]="{
+              'bg-success': feedback.status === 'graded',
+              'bg-warning': feedback.status !== 'graded'
+            }">{{ feedback.status }}</span>
+          </p>
+          <p class="mb-1"><strong>Rating:</strong> {{ feedback.rating || 'N/A' }}</p>
+          <p class="mb-1"><strong>Feedback:</strong> {{ feedback.feedback || 'No feedback yet.' }}</p>
+          <p class="mb-1"><strong>Reviewer Name:</strong> {{ feedback.reviewerName || "unknown" }}</p>
+          <p class="mb-1"><strong>Reviewer Email:</strong> {{ feedback.reviewerEmail || "unknown" }}</p>
+        </div>
       </div>
     </div>
-  </div>
-  <ng-template #noFeedbacks>
-    <div class="alert alert-info text-center">No feedbacks found.</div>
-  </ng-template>
+    <ng-template #noFeedbacks>
+      <div class="alert alert-info text-center">No feedbacks found.</div>
+    </ng-template>
+  </ng-container>
 </div>

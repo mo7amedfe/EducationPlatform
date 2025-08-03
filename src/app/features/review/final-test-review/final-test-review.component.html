@@ -1,139 +1,121 @@
-<!-- Loader -->
-<div *ngIf="isLoading" class="d-flex justify-content-center align-items-center my-5" style="min-height: 200px;">
-  <div class="spinner-border text-primary" role="status">
-    <span class="visually-hidden">Loading...</span>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Students Final Tests</h2>
+    <button class="btn btn-secondary" (click)="reloadSubmissions()" [disabled]="isLoadingSubmissions">
+      <span *ngIf="isLoadingSubmissions" class="spinner-border spinner-border-sm " role="status"></span>
+      <i  *ngIf="!isLoadingSubmissions" class="fa-solid fa-rotate-right"></i>
+    </button>
   </div>
-  <span class="ms-3">Loading submissions...</span>
-</div>
-
-<!-- Final Test Submissions List -->
-<div class="container" *ngIf="!isLoading; else noSubmissions">
-  <h2 class="mb-4">Students Final Tests Submissions</h2>
-
-  <!-- Filters Row -->
-  <div class="row mb-3">
-    <div class="col-md-6">
-      <label for="courseSelect" class="form-label fw-bold">Filter by Course</label>
-      <select id="courseSelect" class="form-select" [(ngModel)]="selectedCourse" (change)="onCourseChange()">
-        <option value="">All Courses</option>
-        <option *ngFor="let course of courses" [value]="course.courseId">{{ course.courseName }}</option>
-      </select>
+  <!-- Loader -->
+  <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center my-5" style="min-height: 200px;">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
     </div>
-    <div class="col-md-6">
-      <label class="form-label fw-bold">Filter by Status</label>
-      <div class="d-flex gap-3">
-        <div class="form-check">
-          <input 
-            class="form-check-input" 
-            type="checkbox" 
-            id="allStatus" 
-            [checked]="selectedStatus === ''"
-            (change)="onStatusCheckboxChange('')"
-          >
-          <label class="form-check-label" for="allStatus">
-            All Status
-          </label>
-        </div>
-        <div class="form-check">
-          <input 
-            class="form-check-input" 
-            type="checkbox" 
-            id="pendingStatus" 
-            [checked]="selectedStatus === 'pending'"
-            (change)="onStatusCheckboxChange('pending')"
-          >
-          <label class="form-check-label" for="pendingStatus">
-            Pending
-          </label>
-        </div>
-        <div class="form-check">
-          <input 
-            class="form-check-input" 
-            type="checkbox" 
-            id="gradedStatus" 
-            [checked]="selectedStatus === 'graded'"
-            (change)="onStatusCheckboxChange('graded')"
-          >
-          <label class="form-check-label" for="gradedStatus">
-            Graded
-          </label>
+    <span class="ms-3">Loading submissions...</span>
+  </div>
+  <ng-container *ngIf="!isLoading">
+    <!-- Filters Row -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="courseSelect" class="form-label fw-bold">Filter by Course</label>
+        <select id="courseSelect" class="form-select" [(ngModel)]="selectedCourse" (change)="onCourseChange()">
+          <option value="">All Courses</option>
+          <option *ngFor="let course of courses" [value]="course.courseId">{{ course.courseName }}</option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label fw-bold">Filter by Status</label>
+        <div class="d-flex gap-3">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="allStatus" [checked]="selectedStatus === ''"
+              (change)="onStatusCheckboxChange('')">
+            <label class="form-check-label" for="allStatus">
+              All Status
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="pendingStatus" [checked]="selectedStatus === 'pending'"
+              (change)="onStatusCheckboxChange('pending')">
+            <label class="form-check-label" for="pendingStatus">
+              Pending
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="gradedStatus" [checked]="selectedStatus === 'graded'"
+              (change)="onStatusCheckboxChange('graded')">
+            <label class="form-check-label" for="gradedStatus">
+              Graded
+            </label>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+    <!-- Submissions List -->
+    <div *ngIf="submissions.length > 0; else noFilteredSubmissions">
+      <div class="row">
+        <div *ngFor="let submission of submissions" class="col-md-6 mb-4 p-2">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <!-- Header: Student Info & Status -->
+              <!-- Meta Info -->
+              <p class="mb-1"><strong>Student Name:</strong> {{ submission.studentName || "DeletedUser"}}</p>
+              <p class="mb-1"><strong>Student Email:</strong> {{ submission.studentEmail || "DeletedUser"}}</p>
+              <p class="mb-1"><strong>Course:</strong> {{ submission.courseName }}</p>
+              <p class="mb-1"><strong>Submitted At:</strong> {{ submission.submittedAt | date:'short' }}</p>
 
-  <!-- Submissions List -->
-  <div *ngIf="submissions.length > 0; else noFilteredSubmissions">
-    <div class="row">
-      <div *ngFor="let submission of submissions" class="col-md-6 mb-4 p-2">
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <!-- Header: Student Info & Status -->
-            <!-- Meta Info -->
-            <p class="mb-1"><strong>Student Name:</strong> {{ submission.studentName || "DeletedUser"}}</p>
-            <p class="mb-1"><strong>Student Email:</strong> {{ submission.studentEmail || "DeletedUser"}}</p>
-            <p class="mb-1"><strong>Course:</strong> {{ submission.courseName }}</p>
-            <p class="mb-1"><strong>Submitted At:</strong> {{ submission.submittedAt | date:'short' }}</p>
-
-            <p class="card-text">
-              <strong>Status: </strong>
-              <span class="badge" [ngClass]="{
-                'bg-warning': submission.status === 'pending',
-                'bg-success': submission.status === 'graded'
-              }">
-                {{ submission.status }}
-              </span>
-            </p>
-            <!-- Download Button -->
-            <div class="mt-3">
-              <a class="btn btn-primary btn-sm me-2" (click)="downloadSubmission(submission)">
-                <i class="bi bi-download"></i> Download File
-              </a>
-            </div>
-
-            <!-- Feedback Section -->
-            <div *ngIf="submission.status !== 'graded'" class="mt-3">
-              <div class="form-group mb-2">
-                <label for="feedback-{{submission._id}}">Feedback</label>
-                <textarea [(ngModel)]="submission.feedback" id="feedback-{{submission._id}}" class="form-control" rows="2"
-                  placeholder="Write your feedback..."></textarea>
+              <p class="card-text">
+                <strong>Status: </strong>
+                <span class="badge" [ngClass]="{
+                  'bg-warning': submission.status === 'pending',
+                  'bg-success': submission.status === 'graded'
+                }">
+                  {{ submission.status }}
+                </span>
+              </p>
+              <!-- Download Button -->
+              <div class="mt-3">
+                <a class="btn btn-primary btn-sm me-2" (click)="downloadSubmission(submission)">
+                  <i class="bi bi-download"></i> Download File
+                </a>
               </div>
 
-              <div class="form-group mb-2">
-                <label for="rating-{{submission._id}}">Rating (1–5)</label>
-                <input type="number" [(ngModel)]="submission.rating" id="rating-{{submission._id}}" class="form-control"
-                  min="1" max="5" placeholder="Enter rating" />
+              <!-- Feedback Section -->
+              <div *ngIf="submission.status !== 'graded'" class="mt-3">
+                <div class="form-group mb-2">
+                  <label for="feedback-{{submission._id}}">Feedback</label>
+                  <textarea [(ngModel)]="submission.feedback" id="feedback-{{submission._id}}" class="form-control"
+                    rows="2" placeholder="Write your feedback..."></textarea>
+                </div>
+
+                <div class="form-group mb-2">
+                  <label for="rating-{{submission._id}}">Rating (1–5)</label>
+                  <input type="number" [(ngModel)]="submission.rating" id="rating-{{submission._id}}"
+                    class="form-control" min="1" max="5" placeholder="Enter rating" />
+                </div>
+
+                <button class="btn btn-success" (click)="giveFeedback(submission)" [disabled]="isLoadingFeedback">
+                  <i class="bi bi-check-circle"></i> Submit Feedback
+                </button>
               </div>
 
-              <button class="btn btn-success" (click)="giveFeedback(submission)" [disabled]="isLoadingFeedback">
-                <i class="bi bi-check-circle"></i> Submit Feedback
-              </button>
-            </div>
-
-            <!-- Graded Info -->
-            <div *ngIf="submission.status === 'graded'" class="mt-3">
-              <p><strong>Rating:</strong> {{ submission.rating }}</p>
-              <p><strong>Feedback:</strong> {{ submission.feedback }}</p>
+              <!-- Graded Info -->
+              <div *ngIf="submission.status === 'graded'" class="mt-3">
+                <p><strong>Rating:</strong> {{ submission.rating }}</p>
+                <p><strong>Feedback:</strong> {{ submission.feedback }}</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+    <!-- No Filtered Submissions -->
+    <ng-template #noFilteredSubmissions>
+      <div class="alert alert-info">
+        <i class="bi bi-info-circle me-2"></i>
+        No Final Test submissions found matching the selected filters.
+
+      </div>
+    </ng-template>
+  </ng-container>
+
 </div>
-
-<!-- No Filtered Submissions -->
-<ng-template #noFilteredSubmissions>
-  <div class="alert alert-info">
-    <i class="bi bi-info-circle me-2"></i>
-    No submissions found matching the selected filters.
-  </div>
-</ng-template>
-
-<!-- No Submissions -->
-<ng-template #noSubmissions>
-  <div class="alert alert-info">
-    <i class="bi bi-info-circle me-2"></i>
-    No submissions found for this course.
-  </div>
-</ng-template>

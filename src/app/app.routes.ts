@@ -18,6 +18,7 @@ import { PlacementTestComponent } from './features/placement-test/placement-test
 import { CourseDetailesComponent } from './features/course-detailes/course-detailes.component';
 import { AdminCoursesComponent } from './features/admin/admin-courses/admin-courses.component';
 import { InstructorDashboardComponent } from './features/instructor/instructor-dashboard/instructor-dashboard.component';
+import { ReviewComponent } from './features/review/review.component';
 
 export const routes: Routes = [
 
@@ -67,7 +68,7 @@ export const routes: Routes = [
   },
 
   {
-    path: 'studentsAssignments',component:StudentsAssignmentsComponent,canActivate:[authGuard,instructorGuard]
+    path: 'Review',component:ReviewComponent,canActivate:[authGuard,instructorGuard]
   },
   
   {

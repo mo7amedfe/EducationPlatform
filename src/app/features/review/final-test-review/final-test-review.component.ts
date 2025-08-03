@@ -20,18 +20,24 @@ export class FinalTestReviewComponent implements OnInit {
   selectedStatus: string = ''; // Add status filter
   isLoading = true;
   isLoadingFeedback = false;
-  isDownloadingSubmission = false;
+  isLoadingSubmissions = false;
+  isDownloadingSubmission=false
   errorMessage = '';
   hasError = false;
 
+
   ngOnInit(): void {
-    this.isLoading = true;
-    this.hasError = false;
-    this.errorMessage = '';
     this.loadSubmissions();
+  }
+  reloadSubmissions(){
+    this.loadSubmissions()
   }
 
   loadSubmissions() {
+    this.hasError = false;
+    this.errorMessage = '';
+
+    this.isLoadingSubmissions=true
     this._ReviewService.getFinalTestSubmissions().subscribe({
       next: (res: any) => {
         console.log('API Response:', res);
@@ -66,6 +72,7 @@ export class FinalTestReviewComponent implements OnInit {
           }
           
           this.isLoading = false;
+          this.isLoadingSubmissions=false
           this.hasError = false;
         } catch (error) {
           console.error('Error processing submissions:', error);

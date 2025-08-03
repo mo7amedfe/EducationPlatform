@@ -13,17 +13,23 @@ import { FormsModule } from '@angular/forms';
 export class AssignmentFeedbacksComponent implements OnInit {
   feedbacks: any[] = [];
   selectedCourse: string = '';
+  isLoading = true; // Add loading state
 
-private _UserService=inject(UserService)
+  private _UserService = inject(UserService);
+
   ngOnInit(): void {
-
+    this.isLoading = true;
     this._UserService.getAssignmentsFeedbacks().subscribe({
-        next: (res: any) => {
-          console.log(res);
-          
-          this.feedbacks = Array.isArray(res.submissions) ? res.submissions : [];
-        }
-      });
+      next: (res: any) => {
+        console.log(res);
+        this.feedbacks = Array.isArray(res.submissions) ? res.submissions : [];
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error loading feedbacks:', err);
+        this.isLoading = false;
+      }
+    });
   }
 
   get courses(): string[] {

@@ -72,13 +72,13 @@ export class NavbarComponent implements OnInit {
     if (role === 'Admin') {
       this.navs = [
         { name: 'Admin', link: '/admin' },
-        { name: 'Assignments', link: '/studentsAssignments' },
+        { name: 'Review', link: '/Review' },
         { name: 'Courses', link: '/courses' },
       ];
     } else if (role === 'Instructor') {
       this.navs = [
         { name: 'Dashboard', link: '/instructorDashboard' },
-        { name: 'Assignments', link: '/studentsAssignments' },
+        { name: 'Review', link: '/Review' },
         { name: 'Courses', link: '/courses' },
       ];
     } else if (role === 'Student') {
