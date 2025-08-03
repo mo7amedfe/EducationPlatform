@@ -15,6 +15,7 @@ export class StudentsAssignmentsComponent implements OnInit {
 
   submissions: any[] = [];
   selectedCourse: string = '';
+  selectedStatus: string = ''; // Add status filter
   uniqueCourses: string[] = [];
   isLoading = true;
 isLoadingFeedback = false;
@@ -44,12 +45,23 @@ isLoadingFeedback = false;
   }
 
   filteredSubmissions(): any[] {
-    if (!this.selectedCourse) {
-      return this.submissions;
+    let filteredSubmissions = this.submissions;
+    
+    // Filter by course
+    if (this.selectedCourse) {
+      filteredSubmissions = filteredSubmissions.filter(
+        (sub) => sub.lessonId?.courseId?.title === this.selectedCourse
+      );
     }
-    return this.submissions.filter(
-      (sub) => sub.lessonId?.courseId?.title === this.selectedCourse
-    );
+    
+    // Filter by status
+    if (this.selectedStatus) {
+      filteredSubmissions = filteredSubmissions.filter(
+        (sub) => sub.status === this.selectedStatus
+      );
+    }
+    
+    return filteredSubmissions;
   }
 
   giveFeedback(submission: any) {
@@ -86,14 +98,19 @@ isLoadingFeedback = false;
       },
     });
   }
+
+  onStatusCheckboxChange(status: string) {
+    this.selectedStatus = status;
+  }
   downloadSubmission(submission_id: string) {
     this._ReviewService.downloadAssignmentSubmission(submission_id).subscribe({
       next: (blob) => {
         const file = new Blob([blob], { type: 'application/pdf' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(file);
+        const submission = this.submissions.find((s) => s._id === submission_id);
   
-        link.download = 'Assignment-submission.pdf';
+        link.download = `Assignment-submission ${submission?.userId?.username}-${submission?.lessonId?.title}.pdf`;
         link.click();
         URL.revokeObjectURL(link.href);
       },
