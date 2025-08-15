@@ -16,7 +16,7 @@ export class AdminService {
   }
 
   DeleteUser(body: any): Observable<any> {
-    return this._HttpClient.delete(`${this.baseUrl}/user/deleteUser`, body);
+    return this._HttpClient.delete(`${this.baseUrl}/user/deleteUser`, {body});
   }
   addCourse(courseData: any): Observable<any> {
     return this._HttpClient.post(`${this.baseUrl}/course/`, courseData);
